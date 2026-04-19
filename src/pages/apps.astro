@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const apps = [
+  { title: "YAP - Your Adaptive Planner", date: "2026-04-19", url: "/apps/yap", desc: "Cool planner app." },
+];
+---
+
+<Layout title="./apps">
+  <h1>
+    <span id="typewriter" data-text="./apps"></span><span class="cursor">█</span> muhammed berk önder
+  </h1>
+  
+  <ul class="post-list">
+    {apps.map(post => (
+      <li>
+        <a href={post.url}>{post.title}</a>
+        <span class="date">{post.date}</span>
+        <div>{post.desc}</div>
+      </li>
+    ))}
+  </ul>
+</Layout>

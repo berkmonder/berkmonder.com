@@ -6,7 +6,7 @@ const { title } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title} | muhammed berk onder</title>
+    <title>{title} | muhammed berk önder</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsEw09800kqc/qfdOUk14q0EWeK1t/70kLdEUT12L4sA92Hh1O6kK2A58Y" crossorigin="anonymous">
     
@@ -23,7 +23,6 @@ const { title } = Astro.props;
           --muted: #888;
         }
       }
-
       body {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         background-color: var(--bg);
@@ -34,68 +33,52 @@ const { title } = Astro.props;
         line-height: 1.6;
         font-size: 15px;
       }
-
       h1, h2, h3 {
         font-weight: normal;
         margin-top: 2em;
       }
-
-      /* Force ALL links to use your text color, overriding browser defaults */
       a {
         color: #A7EC70;
         text-decoration: underline;
-        text-decoration-color: var(--muted); 
-        text-underline-offset: 3px; 
+        text-decoration-color: var(--muted);
+        text-underline-offset: 3px;
         transition: text-decoration-color 0.2s ease;
       }
-      
       a:hover {
         text-decoration-color: var(--text); 
       }
-
-      /* Navigation styling */
       nav {
         margin-bottom: 2rem;
         display: flex;
         gap: 1.5rem;
         font-size: 1.8em;
       }
-
       nav a {
         color: var(--text);
         text-decoration: none;
       }
-      
       nav a:hover {
         text-decoration: underline;
         text-decoration-color: var(--text);
       }
-
-      /* Lists and Dates */
       .post-list {
         list-style: none;
         padding: 0;
       }
-      
       .post-list li {
         margin-bottom: 1rem;
       }
-      
       .date {
         color: var(--muted);
         margin-right: 0.5rem;
       }
-
-      /* Cursor with alignment fix */
       .cursor {
-        color: var(--text); 
+        color: var(--text);
         animation: smoothBlink 0.6s ease-in-out infinite;
         margin-left: 4px;
-        font-size: 0.85em;
         display: inline-block;
-        transform: translateY(-5px); /* Shifted higher up the Y-axis */
+        transform: translateY(-4px) scaleY(1.1);
       }
-
       @keyframes smoothBlink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0; }
@@ -106,6 +89,7 @@ const { title } = Astro.props;
     <nav>
       <a href="/">home</a>
       <a href="/about">about</a>
+      <a href="/apps">apps</a>
       <a href="/blog">blog</a>
     </nav>
     <main>
