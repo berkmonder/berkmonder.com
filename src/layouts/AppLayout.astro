@@ -1,0 +1,31 @@
+---
+import Layout from "./Layout.astro";
+
+const { appName, tagline, playStoreUrl } = Astro.props;
+---
+
+<Layout title={`./apps/${appName}`}>
+  <h1>
+    <span id="typewriter" data-text={`./apps/${appName}`}></span><span class="cursor">█</span>
+  </h1>
+  
+  <section style="margin-bottom: 3rem;">
+    <h2>{appName}</h2>
+    <p style="font-size: 1.1em; color: var(--muted);">{tagline}</p>
+    
+    {playStoreUrl && (
+      <a 
+        href={playStoreUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        style="display: inline-block; margin-top: 1rem; font-weight: bold; padding: 0.6rem 1.2rem; border: 1px solid var(--text); border-radius: 6px; text-decoration: none; color: var(--bg); background-color: var(--text); transition: opacity 0.2s ease;"
+        onmouseover="this.style.opacity='0.8'"
+        onmouseout="this.style.opacity='1'"
+      >
+        Download on Google Play
+      </a>
+    )}
+  </section>
+
+  <slot />
+</Layout>

@@ -1,6 +1,8 @@
 ---
-layout: ../../../layouts/Layout.astro
+layout: ../../../layouts/AppDocLayout.astro
 title: "Privacy Policy | YAP - Your Adaptive Planner"
+backUrl: "/apps/yap"
+backText: "Back to YAP"
 date: 2026-04-19
 ---
 
