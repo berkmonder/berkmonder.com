@@ -1,23 +1,31 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 
 const posts = [
-  { title: "Attention!", date: "2026-04-14", url: "/blog/attention", desc: "Test blog." },
+  {
+    title: "Hosting a VPS Is Easier Than You Think!",
+    date: "2026-08-02",
+    url: "/blog/hosting-a-vps",
+    desc: "A comprehensive guide to hosting a VPS from scratch.",
+  },
 ];
 ---
 
 <Layout title="./blog">
   <h1>
-    <span id="typewriter" data-text="./blog"></span><span class="cursor">█</span> muhammed berk önder
+    <span id="typewriter" data-text="./blog"></span><span class="cursor">█</span
+    > muhammed berk önder
   </h1>
-  
+
   <ul class="post-list">
-    {posts.map(post => (
-      <li>
-        <a href={post.url}>{post.title}</a>
-        <span class="date">{post.date}</span>
-        <div>{post.desc}</div>
-      </li>
-    ))}
+    {
+      posts.map((post) => (
+        <li>
+          <a href={post.url}>{post.title}</a>
+          <span class="date">{post.date}</span>
+          <div>{post.desc}</div>
+        </li>
+      ))
+    }
   </ul>
 </Layout>
