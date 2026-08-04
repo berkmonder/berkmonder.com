@@ -1,8 +1,9 @@
 ---
-layout: ../../layouts/Layout.astro
+layout: ../../layouts/BlogPost.astro
 title: "Hosting a VPS Is Easier Than You Think"
-date: 2026-04-14
+date: "2026-04-14"
 ---
+
 
 # Hosting a VPS Is Easier Than You Think!
 <span class="date">2026-08-02</span>

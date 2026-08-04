@@ -1,31 +1,53 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Nav from "../components/nav.astro";
+import Footer from "../components/footer.astro";
 
 const posts = [
   {
     title: "Hosting a VPS Is Easier Than You Think!",
     date: "2026-08-02",
     url: "/blog/hosting-a-vps",
-    desc: "A comprehensive guide to hosting a VPS from scratch.",
+    desc: "A comprehensive guide to hosting a VPS from scratch for self-hosting apps and tools.",
   },
 ];
 ---
 
-<Layout title="./blog">
-  <h1>
-    <span id="typewriter" data-text="./blog"></span><span class="cursor">█</span
-    > muhammed berk önder
-  </h1>
+<Layout title="Blog | Muhammed Berk Önder">
+  <Nav />
+  <main class="max-w-4xl mx-auto py-24 md:py-36 px-4 min-h-[70vh]">
+    <div class="space-y-6">
+      <h1 class="text-4xl md:text-5xl font-medium text-[var(--white)]">
+        Blog & Writings
+      </h1>
+      <p class="text-base text-[var(--white-icon)]">
+        Thoughts on MLOps, AI infrastructure, physics, and self-hosted tools.
+      </p>
 
-  <ul class="post-list">
-    {
-      posts.map((post) => (
-        <li>
-          <a href={post.url}>{post.title}</a>
-          <span class="date">{post.date}</span>
-          <div>{post.desc}</div>
-        </li>
-      ))
-    }
-  </ul>
+      <div class="grid grid-cols-1 gap-4 pt-6">
+        {
+          posts.map((post) => (
+            <a
+              href={post.url}
+              class="block bg-[#1414149c] border border-[var(--white-icon-tr)] hover:border-[var(--sec)] p-6 rounded-2xl transition duration-300 group"
+            >
+              <div class="flex justify-between items-start">
+                <h2 class="text-xl md:text-2xl font-medium text-[var(--white)] group-hover:text-[var(--sec)] transition duration-200">
+                  {post.title}
+                </h2>
+                <span class="text-xs text-[var(--sec)] border border-[var(--white-icon-tr)] px-3 py-1 rounded-full bg-[#181818]">
+                  {post.date}
+                </span>
+              </div>
+              <p class="text-sm text-[var(--white-icon)] mt-2 leading-relaxed">
+                {post.desc}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+  <Footer />
 </Layout>
+
