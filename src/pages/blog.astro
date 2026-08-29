@@ -1,53 +1,107 @@
 ---
+import "../styles/article-list.css";
+
+import { getCollection } from "astro:content";
+import { openGraph } from "spectre:globals";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
-import Nav from "../components/nav.astro";
-import Footer from "../components/footer.astro";
 
-const posts = [
-  {
-    title: "Hosting a VPS Is Easier Than You Think!",
-    date: "2026-08-02",
-    url: "/blog/hosting-a-vps",
-    desc: "A comprehensive guide to hosting a VPS from scratch for self-hosting apps and tools.",
-  },
-];
+const posts = await getCollection("posts", (post) => post.data.draft !== true);
+const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 ---
-
-<Layout title="Blog | Muhammed Berk Önder">
-  <Nav />
-  <main class="max-w-4xl mx-auto py-24 md:py-36 px-4 min-h-[70vh]">
-    <div class="space-y-6">
-      <h1 class="text-4xl md:text-5xl font-medium text-[var(--white)]">
-        Blog & Writings
-      </h1>
-      <p class="text-base text-[var(--white-icon)]">
-        Thoughts on MLOps, AI infrastructure, physics, and self-hosted tools.
-      </p>
-
-      <div class="grid grid-cols-1 gap-4 pt-6">
-        {
-          posts.map((post) => (
+<Layout
+  title={openGraph.blog.title || "Blog"}
+  description={openGraph.blog.description}
+	pagefindIgnore
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">Filter</h2>
+      <ul class="tags-list">
+        {Array.from(new Set(tags)).map((tag) => (
+          <li>
             <a
-              href={post.url}
-              class="block bg-[#1414149c] border border-[var(--white-icon-tr)] hover:border-[var(--sec)] p-6 rounded-2xl transition duration-300 group"
+              class="blog-tag"
+              href="/blog"
+              data-tag={tag}
             >
-              <div class="flex justify-between items-start">
-                <h2 class="text-xl md:text-2xl font-medium text-[var(--white)] group-hover:text-[var(--sec)] transition duration-200">
-                  {post.title}
-                </h2>
-                <span class="text-xs text-[var(--sec)] border border-[var(--white-icon-tr)] px-3 py-1 rounded-full bg-[#181818]">
-                  {post.date}
-                </span>
-              </div>
-              <p class="text-sm text-[var(--white-icon)] mt-2 leading-relaxed">
-                {post.desc}
-              </p>
+              {tag}
             </a>
-          ))
-        }
-      </div>
-    </div>
-  </main>
-  <Footer />
+          </li>
+        ))}
+      </ul>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+		<Card>
+			<div class="header-container">
+				<Icon type="lucide" name="rss" width={24} height={24} class='glow-icon' />
+				<h2>Latest Posts</h2>
+			</div>
+			<div class="content-container">
+				{posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()).map((post) => (
+					<a href={`/blog/${post.id}`} class="post-container" data-tags={post.data.tags.map((tag) => tag.id).join(",")}>
+						<div class="post-header">
+							<h3>{post.data.title}</h3>
+							<span class="post-date">{post.data.createdAt.toLocaleDateString()}</span>
+						</div>
+						<span>{post.data.description}</span>
+					</a>
+				))}
+			</div>
+		</Card>
+  </div>
 </Layout>
+<script>
+  const tags = document.querySelectorAll<HTMLAnchorElement>('.blog-tag');
+  const posts = document.querySelectorAll<HTMLAnchorElement>('.post-container');
+  const url = new URL(window.location.href);
+  const initialTags = url.searchParams.get('tags')?.split(',').filter((tag) => tag.length > 0) || [];
+  const selectedTags = new Set(initialTags);
 
+  function updatePostsVisibility() {
+    posts.forEach((post) => {
+      const postTags = post.dataset.tags!.split(',');
+      // if there are selected tags and the post does not have all of them, hide the post
+      if (selectedTags.size > 0 && ![...selectedTags].every((tag) => postTags.includes(tag))) {
+        post.style.display = 'none';
+      } else {
+        post.style.display = '';
+      }
+    });
+  }
+
+  function updateURL() {
+    // create a "clean" URL for the current page before adding the new query parameters
+    const newUrl = new URL(window.location.pathname, window.location.origin);
+    if (selectedTags.size > 0) {
+      newUrl.searchParams.set('tags', [...selectedTags].join(','));
+    }
+    history.pushState({ tags: [...selectedTags] }, '', newUrl);
+  }
+
+  tags.forEach((tag) => {
+    const tagValue = tag.dataset.tag!;
+    if (selectedTags.has(tagValue)) {
+      tag.classList.add('active');
+    }
+
+    tag.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      tag.classList.toggle('active');
+
+      if (selectedTags.has(tagValue)) {
+        selectedTags.delete(tagValue);
+      } else {
+        selectedTags.add(tagValue);
+      }
+
+      updatePostsVisibility();
+      updateURL();
+    });
+  });
+
+  updatePostsVisibility();
+</script>

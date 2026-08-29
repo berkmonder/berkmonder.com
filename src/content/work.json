@@ -1,0 +1,16 @@
+[
+	{
+		"id": 1,
+		"duration": "2022 - 2024",
+		"company": "P.I. Works",
+		"title": "Prototype & Machine Learning Engineer",
+		"description": "ML Engineer at P.I. Works."
+	},
+	{
+		"id": 2,
+		"duration": "2024 - present",
+		"company": "Teknasyon",
+		"title": "MLOps Engineer",
+		"description": "MLOps Engineer at Teknasyon."
+	}
+]

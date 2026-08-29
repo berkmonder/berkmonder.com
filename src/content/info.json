@@ -1,0 +1,28 @@
+[
+	{
+		"id": 1,
+		"icon": {
+			"type": "lucide",
+			"name": "brain-cog"
+		},
+		"text": "ML/MLOps Engineer"
+	},
+	{
+		"id": 2,
+		"icon": {
+			"type": "lucide",
+			"name": "atom"
+		},
+		"type": "lucide",
+		"text": "Physics M.Sc."
+	},
+	{
+		"id": 3,
+		"icon": {
+			"type": "lucide",
+			"name": "earth"
+		},
+		"type": "lucide",
+		"text": "Lives in Turkiye"
+	}
+]
