@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: ../../../layouts/AppDocLayout.astro
 title: "Press Kit | YAP - Your Adaptive Planner"
 backUrl: "/apps/yap"
@@ -22,4 +22,4 @@ YAP is a smart, adaptable planner app that stays completely local. It respects y
 *(Add links to a Google Drive or Dropbox folder containing high-res icons and screenshots here)*
 
 ## Contact
-For press inquiries, please email [berkmonder@gmail.com](mailto:berkmonder@gmail.com).
+For press inquiries, please email [berkmonder@gmail.com](mailto:berkmonder@gmail.com). -->

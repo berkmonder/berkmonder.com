@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: ../../../layouts/AppDocLayout.astro
 title: "Privacy Policy | YAP - Your Adaptive Planner"
 backUrl: "/apps/yap"
@@ -36,4 +36,4 @@ We may update this Privacy Policy from time to time. Any changes will be posted 
 
 ## 8. Contact
 If you have any questions, you can contact us at:  
-[berkmonder@gmail.com](mailto:berkmonder@gmail.com)
+[berkmonder@gmail.com](mailto:berkmonder@gmail.com) -->

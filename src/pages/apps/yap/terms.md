@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: ../../../layouts/AppDocLayout.astro
 title: "Terms of Service | YAP - Your Adaptive Planner"
 backUrl: "/apps/yap"
@@ -27,4 +27,4 @@ We reserve the right to modify these Terms at any time. We will notify users of 
 
 ## 6. Contact
 If you have any questions about these Terms, please contact:  
-[berkmonder@gmail.com](mailto:berkmonder@gmail.com)
+[berkmonder@gmail.com](mailto:berkmonder@gmail.com) -->
