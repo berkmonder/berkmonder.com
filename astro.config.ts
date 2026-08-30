@@ -4,7 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 import expressiveCode from "astro-expressive-code";
 // import { loadEnv } from "vite";
-// import spectre, { type GiscusMapping } from "./package/src";
+import spectre, { type GiscusMapping } from "./package/src";
 // import { spectreDark } from "./src/ec-theme";
 
 // const {
