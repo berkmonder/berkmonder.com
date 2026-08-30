@@ -8,13 +8,10 @@
 	"packageManager": "pnpm@10.27.0",
 	"scripts": {
 		"dev": "astro dev",
-		"build": "astro build",
-		"start": "node dist/server/entry.mjs",
-		"preview": "astro preview",
-		"astro": "astro",
-		"postbuild": "pagefind --site dist/client",
-		"lint": "biome check .",
-		"lint:fix": "biome check --write ."
+		"start": "node ./dist/server/entry.mjs",
+		"build": "astro check && astro build",
+		"preview": "astro preview ",
+		"astro": "astro"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "7.0.0",
