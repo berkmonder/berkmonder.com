@@ -1,0 +1,11 @@
+# Serves the built site. HTTPS, compression and the domain are the server's front Caddy's job.
+:80 {
+	root * /srv
+	# Build output with a content hash in its name never changes: browsers keep it for a year.
+	header /_astro/* Cache-Control "public, max-age=31536000, immutable"
+	file_server
+	handle_errors 404 {
+		rewrite * /404.html
+		file_server
+	}
+}
