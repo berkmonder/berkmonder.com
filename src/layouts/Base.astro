@@ -1,0 +1,85 @@
+---
+// Every page except the lessons (Starlight): head, header, footer.
+import "@fontsource-variable/inter";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/jetbrains-mono";
+import "../styles/global.css";
+
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { site } from "../site";
+
+interface Props {
+	/** The page's own title; the site's name is added after it. Leave out on the home page. */
+	title?: string;
+	description?: string;
+	type?: "website" | "article";
+}
+
+const { title, description = site.description, type = "website" } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : site.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL("/og.png", Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<link rel="alternate" type="application/rss+xml" title={`${site.name}: blog`} href="/rss.xml" />
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={image} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="theme-color" content="#0e7c73" />
+		<script is:inline>
+			// Before the first paint: the visitor's choice (shared with /learn), else the system's.
+			(() => {
+				let theme = null;
+				try {
+					theme = localStorage.getItem("starlight-theme");
+				} catch {}
+				if (theme !== "light" && theme !== "dark") {
+					theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+				}
+				document.documentElement.dataset.theme = theme;
+			})();
+		</script>
+		<slot name="head" />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<Header />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.skip-link {
+		position: absolute;
+		left: 1rem;
+		top: -3rem;
+		z-index: 100;
+		padding: 0.5rem 1rem;
+		border-radius: var(--radius-sm);
+		background: var(--accent);
+		color: var(--accent-ink);
+	}
+	.skip-link:focus {
+		top: 0.75rem;
+	}
+</style>

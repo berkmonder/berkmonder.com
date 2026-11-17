@@ -8,7 +8,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["./src/**", "./package/**"]
+		"includes": ["./src/**", "./scripts/**", "./astro.config.ts"]
 	},
 	"formatter": {
 		"enabled": true,

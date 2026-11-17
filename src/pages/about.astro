@@ -1,0 +1,227 @@
+---
+import ContactBand from "../components/ContactBand.astro";
+import Icon from "../components/Icon.astro";
+import Base from "../layouts/Base.astro";
+import { site, socials } from "../site";
+
+const experience = [
+	{
+		role: "MLOps Engineer",
+		org: "Teknasyon",
+		when: "2024 – now",
+		text: "LLM systems, data pipelines and MLOps on GCP for a mobile app company: a RAG assistant over internal data, anomaly detection pipelines, spam detection at scale, experiment tracking, CI/CD and fine-tuning of 30B models.",
+	},
+	{
+		role: "Machine Learning Engineer",
+		org: "P.I. Works",
+		when: "2022 – 2024",
+		text: "ML for telecom networks: an LLM assistant over knowledge bases and SQL data, traffic forecasting, streaming anomaly detection and synthetic data generation.",
+	},
+];
+
+const education = [
+	{
+		degree: "M.Sc., High Energy and Plasma Physics",
+		org: "İstanbul University",
+		when: "2024",
+	},
+	{ degree: "B.Sc., Physics", org: "İstanbul University", when: "2021" },
+];
+
+const skills = [
+	{
+		area: "LLMs",
+		items:
+			"LangChain, LangGraph, llama.cpp, vLLM, Ollama, LiteLLM, Hugging Face, Unsloth",
+	},
+	{
+		area: "Machine learning",
+		items: "PyTorch, scikit-learn, TensorFlow, PySpark, time series",
+	},
+	{
+		area: "MLOps & infrastructure",
+		items: "MLflow, Airflow, Prefect, Docker, Podman, CI/CD, GCP, Linux, Nix",
+	},
+	{
+		area: "Languages",
+		items: "Python, SQL, Bash · Turkish (native), English (proficient)",
+	},
+];
+---
+
+<Base title="About" description={`${site.fullName}: AI/ML engineer in Istanbul, physicist by training.`}>
+	<section class="section">
+		<div class="wrap intro">
+			<div>
+				<span class="eyebrow">About</span>
+				<h1>Hi, I'm Berk.</h1>
+				<p class="lead">
+					I'm an AI/ML engineer in Istanbul. I studied physics, came to machine learning through data,
+					and since 2022 I've built ML systems that run in production.
+				</p>
+				<p>
+					I care about systems that keep working after the demo: measured, monitored, reproducible, and
+					understood by the people who run them. That's also why I teach. What I learn goes into this
+					blog and into free video lessons.
+				</p>
+				<p>
+					Outside work I read about how the universe works, write small games, and bake cookies.
+				</p>
+				<div class="actions">
+					<a class="btn btn-primary" href={site.resume}><Icon name="download" size={18} /> Download my CV</a>
+					{socials.map((s) => <a class="btn btn-ghost" href={s.href} rel="me"><Icon name={s.icon} size={18} /> {s.label}</a>)}
+				</div>
+			</div>
+			<div class="portrait" aria-hidden="true">
+				<svg viewBox="0 0 32 32">
+					<circle cx="12" cy="16" r="8.5" fill="none" stroke="currentColor" stroke-width="1.2"></circle>
+					<circle cx="20" cy="16" r="8.5" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55"></circle>
+				</svg>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap columns">
+			<div>
+				<h2>Experience</h2>
+				<ol class="timeline">
+					{
+						experience.map((e) => (
+							<li>
+								<p class="when">{e.when}</p>
+								<h3>
+									{e.role} <span class="muted">· {e.org}</span>
+								</h3>
+								<p>{e.text}</p>
+							</li>
+						))
+					}
+				</ol>
+				<h2 class="spaced">Education</h2>
+				<ol class="timeline">
+					{
+						education.map((e) => (
+							<li>
+								<p class="when">{e.when}</p>
+								<h3>{e.degree}</h3>
+								<p class="muted">{e.org}</p>
+							</li>
+						))
+					}
+				</ol>
+			</div>
+			<div>
+				<h2>Skills</h2>
+				<dl class="skills">
+					{
+						skills.map((s) => (
+							<div class="card">
+								<dt>{s.area}</dt>
+								<dd>{s.items}</dd>
+							</div>
+						))
+					}
+				</dl>
+			</div>
+		</div>
+	</section>
+
+	<ContactBand title="Let's talk" text="About a project, a training, or a role. I'm happy to hear what you're working on." />
+</Base>
+
+<style>
+	.intro {
+		display: grid;
+		grid-template-columns: 1.6fr 1fr;
+		gap: 3rem;
+		align-items: center;
+	}
+	.intro p:not(.lead) {
+		color: var(--text-2);
+		max-width: 40rem;
+	}
+	.portrait {
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+		color: var(--accent);
+		display: grid;
+		place-items: center;
+	}
+	.portrait svg {
+		width: 70%;
+	}
+	.columns {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr;
+		gap: clamp(2rem, 5vw, 4rem);
+	}
+	.columns h2 {
+		font-size: 1.6rem;
+	}
+	.spaced {
+		margin-top: 2.5rem;
+	}
+	.timeline {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-left: 2px solid var(--border);
+	}
+	.timeline li {
+		position: relative;
+		padding: 0 0 1.75rem 1.5rem;
+	}
+	.timeline li::before {
+		content: "";
+		position: absolute;
+		left: -7px;
+		top: 0.35rem;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--bg);
+		border: 2px solid var(--accent);
+	}
+	.timeline h3 {
+		font-size: 1.1rem;
+	}
+	.timeline p {
+		color: var(--text-2);
+		font-size: 0.97rem;
+		margin-bottom: 0;
+	}
+	.when {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		color: var(--accent) !important;
+		margin-bottom: 0.25rem !important;
+	}
+	.skills {
+		display: grid;
+		gap: 0.75rem;
+		margin: 0;
+	}
+	.skills .card {
+		padding: 1.1rem 1.25rem;
+	}
+	.skills dt {
+		font-weight: 650;
+		margin-bottom: 0.25rem;
+	}
+	.skills dd {
+		margin: 0;
+		color: var(--text-2);
+		font-size: 0.95rem;
+	}
+	@media (max-width: 54rem) {
+		.intro,
+		.columns {
+			grid-template-columns: 1fr;
+		}
+		.portrait {
+			display: none;
+		}
+	}
+</style>

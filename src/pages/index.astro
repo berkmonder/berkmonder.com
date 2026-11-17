@@ -1,185 +1,292 @@
 ---
-import "../styles/index.css";
-
-import { getCollection, getEntry, render } from "astro:content";
-import { name, openGraph } from "spectre:globals";
-import ProfilePicture from "../assets/pfp.gif";
-import Card from "../components/Card.astro";
+import { getCollection } from "astro:content";
+import ContactBand from "../components/ContactBand.astro";
 import Icon from "../components/Icon.astro";
-import ImageGlow from "../components/ImageGlow.astro";
-import Layout from "../layouts/Layout.astro";
+import Interference from "../components/Interference.astro";
+import WorkCard from "../components/WorkCard.astro";
+import { services } from "../data/services";
+import { work } from "../data/work";
+import Base from "../layouts/Base.astro";
 
-const [posts, projects, about, workExperience, quickInfo, socials] =
-	await Promise.all([
-		getCollection("posts", (post) => post.data.draft !== true),
-		getCollection("projects"),
-		getEntry("other", "about"),
-		getCollection("workExperience"),
-		getCollection("quickInfo"),
-		getCollection("socials"),
-	]);
+const posts = (await getCollection("blog", (p) => !p.data.draft))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, 3);
 
-const { Content: About } = await render(about!);
+const facts = [
+	{ value: "4+ years", label: "shipping ML to production" },
+	{ value: "Telecom & apps", label: "industries I've built for" },
+	{ value: "LLMs · MLOps · time series", label: "what I work on" },
+	{ value: "M.Sc. Physics", label: "how I think about problems" },
+];
 ---
 
-<Layout
-	title={openGraph.home.title || name}
-	description={openGraph.home.description}
-	pagefindIgnore
->
-	<div class="layout-grid-left" slot="left">
-		<Card class="flex-col-card">
-			<ImageGlow
-				quality={100}
-				width={120}
-				height={120}
-				src={ProfilePicture}
-				alt="A purple, minimalist looking ghost."
-				loading="eager"
-			/>
-			<h2>{name}</h2>
-			<ul class="overview-list">
+<Base>
+	<section class="hero">
+		<Interference />
+		<div class="wrap hero-inner">
+			<span class="eyebrow">AI/ML engineer · Istanbul · working worldwide</span>
+			<h1>AI systems that work in production, and a team that can run them.</h1>
+			<p class="lead">
+				I'm Berk. I help companies build LLM and agent systems, set up the infrastructure to run
+				machine learning reliably, and train their people to use and maintain it.
+			</p>
+			<div class="actions">
+				<a class="btn btn-primary" href="/services">Work with me <Icon name="arrow-right" size={18} /></a>
+				<a class="btn btn-ghost" href="/work">See my work</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="facts-wrap">
+		<div class="wrap">
+			<dl class="facts">
 				{
-					quickInfo.map((info) => (
-						<li>
-							<Icon
-								type={info.data.icon.type}
-								name={info.data.icon.name as any}
-								width={24}
-								height={24}
-								class="glow-icon"
-							/>
-							<span>{info.data.text}</span>
-						</li>
-					))
-				}
-			</ul>
-		</Card>
-		<Card>
-			<h3 class="no-mt">Socials</h3>
-			<ul class="overview-list">
-				{
-					socials.map((item) => (
-						<li>
-							<a href={item.data.link} class="socials-link">
-								<Icon
-									type={item.data.icon.type}
-									name={item.data.icon.name as any}
-									width={24}
-									height={24}
-									class="glow-icon"
-								/>
-								<span>{item.data.text}</span>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</Card>
-	</div>
-	<div class="layout-grid-right" slot="right">
-		<Card>
-			<div class="header-container">
-				<Icon
-					type="lucide"
-					name="user"
-					width={24}
-					height={24}
-					class="glow-icon"
-				/>
-				<h2>About me</h2>
-			</div>
-			<div class="prose">
-				<About />
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon
-					type="lucide"
-					name="rss"
-					width={24}
-					height={24}
-					class="glow-icon"
-				/>
-				<h2>Latest Posts</h2>
-			</div>
-			<div class="content-container">
-				{
-					posts
-						.sort(
-							(a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
-						)
-						.slice(0, 2)
-						.map((post) => (
-							<a href={`/blog/${post.id}`} class="post-container">
-								<div class="post-header">
-									<h3>{post.data.title}</h3>
-									<span class="post-date">
-										{post.data.createdAt.toLocaleDateString()}
-									</span>
-								</div>
-								<span>{post.data.description}</span>
-							</a>
-						))
-				}
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon
-					type="lucide"
-					name="folder-git"
-					width={24}
-					height={24}
-					class="glow-icon"
-				/>
-				<h2>Latest Projects</h2>
-			</div>
-			<div class="content-container">
-				{
-					projects
-						.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-						.slice(0, 2)
-						.map((project) => (
-							<a href={`/projects/${project.id}`} class="post-container">
-								<div class="post-header">
-									<h3>{project.data.title}</h3>
-									<span class="post-date">
-										{project.data.date.toLocaleDateString()}
-									</span>
-								</div>
-								<span>{project.data.description}</span>
-							</a>
-						))
-				}
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon
-					type="lucide"
-					name="briefcase-business"
-					width={24}
-					height={24}
-					class="glow-icon"
-				/>
-				<h2>Work Experience</h2>
-			</div>
-			<div class="work-experience-container">
-				{
-					workExperience.reverse().map((entry) => (
-						<div class="work-experience-entry">
-							<span class="work-experience-duration">
-								{entry.data.duration}
-							</span>
-							<h3 class="work-experience-company">{entry.data.company}</h3>
-							<span class="work-experience-role">{entry.data.title}</span>
-							<p class="work-experience-desc">{entry.data.description}</p>
+					facts.map((f) => (
+						<div>
+							<dt>{f.value}</dt>
+							<dd>{f.label}</dd>
 						</div>
 					))
 				}
+			</dl>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap">
+			<div class="section-head">
+				<span class="eyebrow">How I can help</span>
+				<h2>Build it, run it, and teach your team</h2>
 			</div>
-		</Card>
-	</div>
-</Layout>
+			<div class="grid">
+				{
+					services.map((s) => (
+						<a class="card service" href={`/services#${s.id}`}>
+							<span class="icon-badge">
+								<Icon name={s.icon} size={22} />
+							</span>
+							<span class="verb">{s.verb}</span>
+							<h3>{s.title}</h3>
+							<p>{s.short}</p>
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap">
+			<div class="section-head row">
+				<div>
+					<span class="eyebrow">Selected work</span>
+					<h2>Systems I've built</h2>
+				</div>
+				<a href="/work" class="more">All work <Icon name="arrow-right" size={16} /></a>
+			</div>
+			<div class="grid">{work.filter((w) => w.featured).map((item) => <WorkCard item={item} />)}</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap split">
+			<div class="card live">
+				<span class="icon-badge"><Icon name="message-circle" size={22} /></span>
+				<h3>Don't take my word for it</h3>
+				<p>
+					This site runs on systems I built: an assistant that knows my work, served from my own GPU,
+					and a live anomaly detector you can poke at.
+				</p>
+				<div class="actions">
+					<a class="btn btn-primary" href="https://turquoise.berkmonder.com/ask">Ask the assistant</a>
+					<a class="btn btn-ghost" href="https://turquoise.berkmonder.com/anomaly">Live demo</a>
+				</div>
+			</div>
+			<div class="card learn">
+				<span class="icon-badge"><Icon name="play" size={22} /></span>
+				<h3>Free lessons</h3>
+				<p>
+					I'm recording free video lessons on running LLMs, building agents and MLOps. The notes and code
+					for each one live here.
+				</p>
+				<div class="actions">
+					<a class="btn btn-ghost" href="/learn">Go to lessons</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	{
+		posts.length > 0 && (
+			<section class="section">
+				<div class="wrap">
+					<div class="section-head row">
+						<div>
+							<span class="eyebrow">Writing</span>
+							<h2>From the blog</h2>
+						</div>
+						<a href="/blog" class="more">
+							All posts <Icon name="arrow-right" size={16} />
+						</a>
+					</div>
+					<ul class="posts">
+						{posts.map((p) => (
+							<li>
+								<a href={`/blog/${p.id}`}>{p.data.title}</a>
+								<time datetime={p.data.date.toISOString()}>
+									{p.data.date.toLocaleDateString("en-GB", { dateStyle: "medium" })}
+								</time>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		)
+	}
+
+	<ContactBand />
+</Base>
+
+<style>
+	.hero {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		padding-block: clamp(4rem, 12vw, 8.5rem) clamp(3rem, 8vw, 5rem);
+	}
+	.hero-inner {
+		position: relative;
+	}
+	.hero h1 {
+		max-width: 50rem;
+	}
+	.facts-wrap {
+		border-block: 1px solid var(--border);
+		background: var(--surface);
+	}
+	.facts {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		margin: 0;
+	}
+	.facts > div {
+		padding: 1.5rem 1.25rem;
+		border-left: 1px solid var(--border);
+	}
+	.facts > div:first-child {
+		border-left: 0;
+		padding-left: 0;
+	}
+	.facts dt {
+		font-family: var(--font-display);
+		font-weight: 650;
+		font-size: 1.15rem;
+	}
+	.facts dd {
+		margin: 0.15rem 0 0;
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+	.service {
+		color: inherit;
+		text-decoration: none;
+		transition:
+			border-color 0.15s,
+			transform 0.15s,
+			box-shadow 0.15s;
+	}
+	.service:hover {
+		color: inherit;
+		border-color: var(--accent);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow);
+	}
+	.service p {
+		color: var(--text-2);
+		font-size: 0.97rem;
+	}
+	.verb {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+		margin-bottom: 0.3rem;
+	}
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 1rem;
+		max-width: none;
+	}
+	.row h2 {
+		margin-bottom: 0;
+	}
+	.more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		font-weight: 600;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.split {
+		display: grid;
+		grid-template-columns: 1.3fr 1fr;
+		gap: 1.25rem;
+	}
+	.live {
+		background:
+			radial-gradient(100% 120% at 0% 0%, var(--accent-soft), transparent 55%),
+			var(--surface);
+	}
+	.split .actions {
+		margin-top: 1.25rem;
+	}
+	.split p {
+		color: var(--text-2);
+	}
+	.posts {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-top: 1px solid var(--border);
+	}
+	.posts li {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+	.posts a {
+		color: var(--text);
+		font-weight: 600;
+		text-decoration: none;
+	}
+	.posts a:hover {
+		color: var(--accent);
+	}
+	.posts time {
+		color: var(--muted);
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+	@media (max-width: 54rem) {
+		.facts {
+			grid-template-columns: 1fr 1fr;
+		}
+		.facts > div:nth-child(odd) {
+			border-left: 0;
+			padding-left: 0;
+		}
+		.facts > div:nth-child(n + 3) {
+			border-top: 1px solid var(--border);
+		}
+		.split {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

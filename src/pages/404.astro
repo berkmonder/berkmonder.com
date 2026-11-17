@@ -1,39 +1,19 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Base from "../layouts/Base.astro";
 ---
 
-<Layout
-  title={"404"}
-  description={"This page could not be found."}
-	pagefindIgnore
->
-  <div class="notfound-container" slot="404">
-    <h1 class="text-glow">404</h1>
-    <p>This page could not be found.</p>
-    <a class="block-link" href="/">← Back to the homepage</a>
-  </div>
-</Layout>
-<style>
-  .notfound-container {
-    display: flex;
-    height: 80vh;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    text-align: center;
-    flex-direction: column;
-  }
-
-  .notfound-container h1 {
-    font-size: 4rem;
-    margin: 0;
-  }
-
-  .notfound-container p {
-    font-size: 1.25em;
-  }
-
-  .block-link {
-    margin-top: 1rem;
-  }
-</style>
+<Base title="Page not found">
+	<section class="section">
+		<div class="wrap">
+			<span class="eyebrow">404</span>
+			<h1>This page doesn't exist.</h1>
+			<p class="lead">It may have moved when the site was rebuilt. These might help:</p>
+			<div class="actions">
+				<a class="btn btn-primary" href="/">Home</a>
+				<a class="btn btn-ghost" href="/services">Services</a>
+				<a class="btn btn-ghost" href="/work">Work</a>
+				<a class="btn btn-ghost" href="/blog">Blog</a>
+			</div>
+		</div>
+	</section>
+</Base>

@@ -1,0 +1,40 @@
+/* Starlight (/learn) in the site's colors and fonts: the same tokens as global.css, in Starlight's names.
+   Starlight's default theme is dark; `data-theme="light"` switches it. */
+
+:root {
+	--sl-font: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--sl-font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+	--sl-color-accent-low: #0f2e2c;
+	--sl-color-accent: #2bb8a9;
+	--sl-color-accent-high: #a6f0e7;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #e8eeee;
+	--sl-color-gray-2: #c4cfd0;
+	--sl-color-gray-3: #a9b6b8;
+	--sl-color-gray-4: #6f7c7f;
+	--sl-color-gray-5: #22302f;
+	--sl-color-gray-6: #11181b;
+	--sl-color-black: #0b1012;
+}
+
+:root[data-theme="light"] {
+	--sl-color-accent-low: #dff3f0;
+	--sl-color-accent: #0e7c73;
+	--sl-color-accent-high: #0a4f4a;
+	--sl-color-white: #12181b;
+	--sl-color-gray-1: #1e272b;
+	--sl-color-gray-2: #33403f;
+	--sl-color-gray-3: #4a555b;
+	--sl-color-gray-4: #7f8b8f;
+	--sl-color-gray-5: #c9d0ce;
+	--sl-color-gray-6: #eef1f0;
+	--sl-color-gray-7: #f6f7f7;
+	--sl-color-black: #fbfbfa;
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4),
+h1#_top {
+	font-family: "Bricolage Grotesque Variable", var(--sl-font);
+	letter-spacing: -0.02em;
+}

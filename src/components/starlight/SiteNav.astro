@@ -1,0 +1,25 @@
+---
+// /learn's header, right (and its mobile menu): the site's main navigation, in place of social icons.
+import { nav } from "../../site";
+---
+
+<nav class="site-nav" aria-label="Site">
+	{nav.filter((item) => item.href !== "/learn").map((item) => <a href={item.href}>{item.label}</a>)}
+</nav>
+
+<style>
+	.site-nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1rem;
+	}
+	a {
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+		font-size: var(--sl-text-sm);
+		font-weight: 500;
+	}
+	a:hover {
+		color: var(--sl-color-white);
+	}
+</style>
