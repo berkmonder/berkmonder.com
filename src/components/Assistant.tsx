@@ -286,7 +286,7 @@ export default function Assistant() {
 								className="assistant-link"
 								onClick={() => setContact("open")}
 							>
-								Want Berk to get back to you? Leave your email →
+								Contact Berk: leave your email →
 							</button>
 						)}
 						{(contact === "open" || contact === "sending") && (
