@@ -1,0 +1,85 @@
+---
+title: Berk Önder
+description: AI/ML engineer in Istanbul. I build LLM and agent systems, run machine learning in production, and train teams to own it.
+head:
+  - tag: title
+    content: "Berk Önder · AI/ML engineer: consulting, builds and training"
+hero:
+  title: AI systems that work in production, and a team that can run them.
+  tagline: I'm Berk, an AI/ML engineer in Istanbul. I help companies build LLM and agent systems, run machine learning reliably, and train their people to use and maintain it.
+  actions:
+    - text: Work with me
+      link: /services/
+      variant: primary
+    - text: Ask my assistant
+      link: "#ask"
+      variant: secondary
+---
+
+import { Card, CardGrid, LinkButton } from "@astrojs/starlight/components";
+import Section from "../../components/Section.astro";
+
+<Section label="In short">
+
+- **4+ years** taking machine learning to production, in telecom and mobile apps
+- **LLM systems, MLOps and time series**: assistants, agents, pipelines, forecasting, anomaly detection
+- **M.Sc. in physics**, which is how I still approach problems: measure first
+
+</Section>
+
+<Section label="How I can help">
+
+<CardGrid>
+	<Card title="Build: LLM & agent systems" icon="rocket">
+		Assistants that answer from your own data and agents that use your tools, with evaluation and
+		tracing from day one. On cloud APIs or models you host yourself.
+	</Card>
+	<Card title="Run: ML infrastructure" icon="setting">
+		Pipelines, experiment tracking, CI/CD for models, serving and monitoring, so models keep working
+		after launch, at a cost you can see.
+	</Card>
+	<Card title="Teach: your team" icon="open-book">
+		Hands-on workshops on NLP, LLMs and agents for engineers, and practical AI for everyone else. In
+		Turkish or English.
+	</Card>
+</CardGrid>
+
+<LinkButton href="/services/" variant="secondary">All services</LinkButton>
+
+</Section>
+
+<Section label="Selected work">
+
+### A production LLM service on my own GPU
+
+An open model behind LiteLLM, with a key per client, every request traced in MLflow, and
+[Turquoise](/turquoise/), the assistant on this site, as one of its clients. When the GPU is off, the
+assistant answers from search instead.
+
+### RAG assistant over internal data · Teknasyon
+
+Retrieval-augmented answers from structured internal data, with custom Python pipelines and tools.
+
+### Anomaly detection on streaming data · P.I. Works, Teknasyon
+
+Telecom time series first, then detection pipelines on GCP for high-cardinality app events.
+
+<LinkButton href="/work/" variant="secondary">All work</LinkButton>
+
+</Section>
+
+<Section label="Free lessons">
+
+I'm recording free video lessons on running LLMs, building agents and MLOps. The notes and code for
+each live here. [Go to the lessons](/learn/).
+
+</Section>
+
+<Section label="Get in touch">
+
+Have a project, or a team that wants to learn? Tell me what you're working on. The first call is free.
+
+<LinkButton href="mailto:berkmonder@gmail.com?subject=Working%20together">berkmonder@gmail.com</LinkButton>
+<LinkButton href="https://www.linkedin.com/in/berkmonder" variant="secondary">LinkedIn</LinkButton>
+
+</Section>

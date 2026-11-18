@@ -1,0 +1,280 @@
+/* The site's look, on top of Starlight. Starlight's colors are set here (dark first, then light);
+   everything else is a handful of touches: monospace for headings and navigation, a numbered menu,
+   square buttons and plain cards. Starlight's own styles are in CSS layers, so these win. */
+
+:root {
+	--sl-font: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--sl-font-mono: "Geist Mono Variable", ui-monospace, monospace;
+	--font-ui: var(--sl-font-mono);
+	--sl-content-width: 54rem;
+	--radius: 4px;
+
+	--sl-color-accent-low: #0f2e2c;
+	--sl-color-accent: #2bb8a9;
+	--sl-color-accent-high: #7ae6da;
+	--sl-color-white: #f2f2f2;
+	--sl-color-gray-1: #e0e0e0;
+	--sl-color-gray-2: #a3a3a3;
+	--sl-color-gray-3: #8a8a8a;
+	--sl-color-gray-4: #5c5c5c;
+	--sl-color-gray-5: #2a2a2a;
+	--sl-color-gray-6: #171717;
+	--sl-color-black: #0e0e0e;
+
+	--sl-color-bg-nav: var(--sl-color-black);
+	--sl-color-bg-sidebar: var(--sl-color-black);
+	--sl-color-hairline-shade: var(--sl-color-gray-5);
+}
+
+:root[data-theme="light"] {
+	--sl-color-accent-low: #dff3f0;
+	--sl-color-accent: #0e7c73;
+	--sl-color-accent-high: #0a4f4a;
+	--sl-color-white: #111111;
+	--sl-color-gray-1: #222222;
+	--sl-color-gray-2: #4d4d4d;
+	--sl-color-gray-3: #666666;
+	--sl-color-gray-4: #9a9a9a;
+	--sl-color-gray-5: #e0e0e0;
+	--sl-color-gray-6: #f3f3f3;
+	--sl-color-gray-7: #f8f8f8;
+	--sl-color-black: #ffffff;
+}
+
+/* Headings, navigation and labels in monospace */
+
+h1,
+h2,
+h3,
+h4,
+.site-title,
+.sidebar-content,
+.sl-link-button,
+.card .title,
+.sl-badge,
+.label {
+	font-family: var(--font-ui);
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4),
+h1#_top {
+	font-weight: 500;
+	letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h2 {
+	font-size: 1.4rem;
+}
+
+.sl-markdown-content h3 {
+	font-size: 1.1rem;
+}
+
+.sl-markdown-content h4 {
+	font-size: 1rem;
+}
+
+.site-title {
+	font-weight: 500;
+	font-size: 1rem;
+	color: var(--sl-color-white);
+}
+
+.site-title img {
+	height: 1.6rem;
+}
+
+/* Links read as text, underlined; the accent shows on hover */
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+	color: var(--sl-color-white);
+	text-decoration-color: var(--sl-color-gray-4);
+	text-underline-offset: 0.2em;
+}
+
+.sl-markdown-content a:not(:where(.not-content *)):hover {
+	color: var(--sl-color-text-accent);
+	text-decoration-color: currentColor;
+}
+
+/* The left menu: [1] Home, [2] Services, …; inside a group, [ ] and [-] for the open page */
+
+.sidebar-content {
+	font-size: 0.875rem;
+}
+
+.sidebar-content .top-level {
+	counter-reset: nav;
+}
+
+.sidebar-content .top-level > li {
+	counter-increment: nav;
+}
+
+.sidebar-content a {
+	color: var(--sl-color-gray-2);
+	padding-block: 0.3rem;
+}
+
+.sidebar-content a:hover {
+	color: var(--sl-color-white);
+}
+
+.sidebar-content a[aria-current="page"],
+.sidebar-content a[aria-current="page"]:hover {
+	background: transparent;
+	color: var(--sl-color-white);
+	font-weight: 500;
+}
+
+.sidebar-content .top-level > li > a::before,
+.sidebar-content .top-level > li > details > summary .large::before {
+	content: "[" counter(nav) "]";
+	margin-inline-end: 0.75em;
+	color: var(--sl-color-gray-4);
+}
+
+.sidebar-content .top-level > li > a[aria-current="page"]::before {
+	color: var(--sl-color-text-accent);
+}
+
+.sidebar-content .top-level > li > details > summary .group-label .large {
+	color: var(--sl-color-gray-2);
+}
+
+.sidebar-content ul ul a::before {
+	content: "[ ]";
+	margin-inline-end: 0.6em;
+	color: var(--sl-color-gray-4);
+}
+
+.sidebar-content ul ul a[aria-current="page"]::before {
+	content: "[-]";
+	color: var(--sl-color-text-accent);
+}
+
+/* Buttons: square, monospace; the primary one is plain white (black in light mode) */
+
+.sl-link-button {
+	border-radius: var(--radius);
+	font-size: 0.9rem;
+	font-weight: 500;
+	padding: 0.6rem 1.1rem;
+}
+
+.sl-link-button.primary {
+	background: var(--sl-color-white);
+	border-color: var(--sl-color-white);
+	color: var(--sl-color-black);
+}
+
+.sl-link-button.primary:hover {
+	background: var(--sl-color-text-accent);
+	border-color: var(--sl-color-text-accent);
+}
+
+.sl-link-button.secondary {
+	border-color: var(--sl-color-gray-5);
+	color: var(--sl-color-white);
+}
+
+.sl-link-button.secondary:hover {
+	border-color: var(--sl-color-gray-3);
+}
+
+/* Cards: hairline boxes */
+
+.card {
+	border-radius: var(--radius);
+	border-color: var(--sl-color-gray-5);
+	background: transparent;
+	box-shadow: none;
+}
+
+.card .icon {
+	border-radius: var(--radius);
+	color: var(--sl-color-text-accent);
+	background: var(--sl-color-accent-low);
+	border: 0;
+}
+
+.card .title {
+	font-size: 1rem;
+	font-weight: 500;
+}
+
+.sl-markdown-content details {
+	border-color: var(--sl-color-gray-5);
+}
+
+/* The home page: Starlight's hero, left-aligned and without an image column */
+
+[data-has-hero] .hero {
+	grid-template-columns: 1fr;
+	padding-block: clamp(2rem, 8vw, 5rem) 1rem;
+}
+
+[data-has-hero] .hero .stack {
+	align-items: flex-start;
+	text-align: start;
+}
+
+[data-has-hero] .hero .actions {
+	justify-content: flex-start;
+}
+
+[data-has-hero] .hero h1 {
+	font-size: clamp(2.1rem, 5vw, 3.25rem);
+	line-height: 1.1;
+	max-width: 22ch;
+}
+
+[data-has-hero] .hero .tagline {
+	color: var(--sl-color-gray-2);
+	font-size: 1.15rem;
+	max-width: 38rem;
+}
+
+/* <Section label="…">: a label on the left, the content on the right (stacked on phones) */
+
+.section {
+	display: grid;
+	grid-template-columns: 11rem 1fr;
+	gap: 0.5rem 2.5rem;
+	padding-block: 2.5rem;
+	border-top: 1px solid var(--sl-color-gray-5);
+}
+
+.sl-markdown-content .section > .label {
+	margin: 0;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: var(--sl-color-white);
+	letter-spacing: 0;
+}
+
+.section > .body > :first-child {
+	margin-top: 0;
+}
+
+/* Cards inside a section are plain items in a grid (title, then text), not boxes */
+.section .card-grid {
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 1.75rem;
+}
+
+.section .card {
+	border: 0;
+	padding: 0;
+}
+
+.section .card .body {
+	color: var(--sl-color-gray-2);
+	font-size: 0.92rem;
+}
+
+@media (max-width: 50rem) {
+	.section {
+		grid-template-columns: 1fr;
+	}
+}

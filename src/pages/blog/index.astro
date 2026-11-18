@@ -1,0 +1,181 @@
+---
+// The blog's front page: every post with its date, newest first, filterable by tag
+// (/blog/?tag=vps), and a button for the RSS feed. The posts are src/content/docs/blog/*.mdx.
+import { Badge, LinkButton } from "@astrojs/starlight/components";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { formatDate, getPosts } from "../../blog";
+
+const posts = await getPosts();
+const tags = [...new Set(posts.flatMap((post) => post.tags))].sort();
+---
+
+<StarlightPage
+	frontmatter={{
+		title: "Blog",
+		description:
+			"Notes from building and running AI systems: LLMs, agents, MLOps and self-hosting.",
+	}}
+>
+	<p>
+		Notes from building and running AI systems: what worked, what didn't, and how to set it up yourself.
+	</p>
+
+	<div class="bar not-content">
+		{
+			tags.length > 0 && (
+				<div class="tags" role="group" aria-label="Show posts tagged">
+					<button type="button" data-tag="" aria-pressed="true">
+						All
+					</button>
+					{tags.map((tag) => (
+						<button type="button" data-tag={tag} aria-pressed="false">
+							{tag}
+						</button>
+					))}
+				</div>
+			)
+		}
+		<LinkButton href="/blog/rss.xml" icon="rss" variant="secondary">
+			Subscribe (RSS)
+		</LinkButton>
+	</div>
+
+	{
+		posts.length > 0 ? (
+			<ol class="posts not-content">
+				{posts.map((post) => (
+					<li data-tags={JSON.stringify(post.tags)}>
+						<time datetime={post.date.toISOString().slice(0, 10)}>
+							{formatDate(post.date)}
+						</time>
+						<div>
+							<a href={post.url}>{post.title}</a>
+							{post.draft && <Badge text="Draft" variant="caution" />}
+							{post.description && <p>{post.description}</p>}
+						</div>
+					</li>
+				))}
+			</ol>
+		) : (
+			<p>No posts yet. The first ones are on their way: subscribe to hear when they're out.</p>
+		)
+	}
+</StarlightPage>
+
+<script>
+	// The tag buttons: show only the posts with that tag, and keep it in the address (?tag=…).
+	const buttons = document.querySelectorAll<HTMLButtonElement>(".tags button");
+	const posts = document.querySelectorAll<HTMLLIElement>(".posts li");
+
+	function show(tag: string) {
+		for (const button of buttons) {
+			button.setAttribute("aria-pressed", String(button.dataset.tag === tag));
+		}
+		for (const post of posts) {
+			post.hidden = tag !== "" && !JSON.parse(post.dataset.tags ?? "[]").includes(tag);
+		}
+		const url = new URL(location.href);
+		if (tag) url.searchParams.set("tag", tag);
+		else url.searchParams.delete("tag");
+		history.replaceState(null, "", url);
+	}
+
+	for (const button of buttons) {
+		button.addEventListener("click", () => show(button.dataset.tag ?? ""));
+	}
+	const tag = new URLSearchParams(location.search).get("tag");
+	if (tag && [...buttons].some((button) => button.dataset.tag === tag)) show(tag);
+</script>
+
+<style>
+	.bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-block: 2rem 0.5rem;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.tags button {
+		font: inherit;
+		font-family: var(--font-ui);
+		font-size: 0.8rem;
+		padding: 0.3rem 0.7rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--sl-color-gray-2);
+		cursor: pointer;
+	}
+
+	.tags button:hover {
+		color: var(--sl-color-white);
+		border-color: var(--sl-color-gray-3);
+	}
+
+	.tags button[aria-pressed="true"] {
+		color: var(--sl-color-black);
+		background: var(--sl-color-white);
+		border-color: var(--sl-color-white);
+	}
+
+	.bar :global(.sl-link-button) {
+		margin: 0;
+	}
+
+	.posts {
+		list-style: none;
+		padding: 0;
+		margin-top: 1rem;
+	}
+
+	.posts li {
+		display: grid;
+		grid-template-columns: 8rem 1fr;
+		gap: 0.25rem 2rem;
+		padding-block: 1.5rem;
+		border-top: 1px solid var(--sl-color-gray-5);
+	}
+
+	.posts li[hidden] {
+		display: none;
+	}
+
+	.posts time {
+		font-family: var(--font-ui);
+		font-size: 0.85rem;
+		color: var(--sl-color-gray-3);
+		padding-top: 0.15rem;
+	}
+
+	.posts a {
+		font-family: var(--font-ui);
+		font-weight: 500;
+		color: var(--sl-color-white);
+		text-decoration: none;
+		margin-inline-end: 0.5rem;
+	}
+
+	.posts a:hover {
+		color: var(--sl-color-text-accent);
+	}
+
+	.posts p {
+		margin: 0.4rem 0 0;
+		color: var(--sl-color-gray-2);
+		font-size: 0.92rem;
+	}
+
+	@media (max-width: 40rem) {
+		.posts li {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

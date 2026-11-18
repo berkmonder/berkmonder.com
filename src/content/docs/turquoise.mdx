@@ -1,0 +1,51 @@
+---
+title: Turquoise
+description: My assistant, an agent built with Pydantic AI that answers questions about my work and services, on an open model running on my own GPU.
+---
+
+import { Card, CardGrid, LinkButton } from "@astrojs/starlight/components";
+import Section from "../../components/Section.astro";
+
+Turquoise is my assistant: an agent built with [Pydantic AI](https://ai.pydantic.dev) that answers
+questions about my work, my services and this site. It's also an example of what I build for clients:
+an LLM system in production, measured and traced, on hardware I run myself.
+
+<Section label="How it works">
+
+**An open model on my own GPU.** Qwen3.5 9B runs on my workstation behind LiteLLM, and every call is
+traced in MLflow: the prompt, the tool calls, the time and the tokens.
+
+**It looks things up before it answers**, with three tools:
+
+<CardGrid>
+	<Card title="search_profile">
+		Searches my CV (RAG): experience, projects, skills.
+	</Card>
+	<Card title="search_site">
+		Searches this website (RAG): services, posts, lessons.
+	</Card>
+	<Card title="get_status">Checks whether my services and the GPU are up.</Card>
+</CardGrid>
+
+**You see how it got there.** The chat shows the model's thinking, each tool call and the sections it
+retrieved.
+
+**It still answers when the GPU is off**: a quick answer from search instead of the model, and it says
+which one answered.
+
+<LinkButton href="https://github.com/berkmonder/turquoise" icon="github" variant="secondary">
+	The code on GitHub
+</LinkButton>
+
+</Section>
+
+<Section label="Ask it">
+
+Ask about my work, what I offer, or how Turquoise is built. On the other pages, the same chat sits in
+the bottom-right corner.
+
+</Section>
+
+{/* The chat itself, full size (turquoise's script fills it; not-content keeps the page's text styles off it) */}
+
+<div data-turquoise-inline class="not-content"></div>
