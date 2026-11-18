@@ -1,0 +1,89 @@
+---
+title: Work
+description: LLM systems, anomaly detection, forecasting and ML infrastructure I've built.
+---
+
+import Section from "../../components/Section.astro";
+
+Since 2022 I've taken machine learning from idea to production: LLM assistants, anomaly detection,
+forecasting, and the pipelines and infrastructure underneath.
+
+<Section label="In industry">
+
+### RAG assistant over internal data
+
+`Teknasyon` · LangChain, Open WebUI, Python
+
+A modular retrieval-augmented assistant on Open WebUI, with custom Python pipelines and tool
+integrations for precise answers from structured internal data.
+
+### Telco LLM assistant
+
+`P.I. Works` · LangChain, SQL, Python
+
+One interface to ask the knowledge base, query network data in SQL, and get the analysis and charts
+back.
+
+### Anomaly detection on streaming data
+
+`P.I. Works` `Teknasyon` · scikit-learn, Airflow, Dataform, GCP
+
+Multivariate anomaly detection on streaming telecom time series with clustering; later, automated
+detection pipelines on GCP for high-cardinality app event data.
+[Watch a live one](https://turquoise.berkmonder.com/anomaly).
+
+### Network traffic forecasts from football fixtures
+
+`P.I. Works` · scikit-learn, Python
+
+Regression models that predict network traffic heatmaps around football matches, so capacity can be
+planned ahead. Aggregate error went from 77% down to 0.75%.
+
+### Faster, cheaper fine-tuning of 30B models
+
+`Teknasyon` · PyTorch, Hugging Face, RunPod
+
+Fine-tuning ~30B-parameter Qwen models on rented GPUs with better utilization, cutting both training
+time and cost.
+
+### Spam detection at scale
+
+`Teknasyon` · Python, GCP
+
+Re-segmented a production pipeline that processes millions of records a week, removing its memory
+bottlenecks so it runs reliably.
+
+### Reproducible model delivery
+
+`Teknasyon` · MLflow, Airflow, Cloud Build, Docker
+
+MLflow tracking inside Airflow pipelines, and CI/CD with Cloud Build and Docker, so every model is a
+versioned artifact that can be rebuilt.
+
+</Section>
+
+<Section label="My own systems">
+
+### A production LLM service on my own GPU
+
+llama.cpp, LiteLLM, MLflow, Postgres, Open WebUI, NixOS, Tailscale
+
+An open model served by llama.cpp behind LiteLLM, with a key per client, every request traced in
+MLflow, speech in and out, and a chat interface. The [assistant on this site](#ask) is one of its
+clients, and answers from search when the GPU is off.
+
+### Three machines, one repository
+
+NixOS, nix-darwin, sops, Terraform, GitHub Actions
+
+A laptop, a GPU workstation and a cloud server, all configured as code: pull-based deploys, encrypted
+secrets, nightly off-site backups, and [uptime checks](/status/).
+
+### Hive
+
+Open source · [github.com/berkmonder/hive](https://github.com/berkmonder/hive)
+
+A desktop command center for AI coding agents: Claude Code, Codex and Gemini side by side, each in its
+own terminal and git worktree, with review, commit and merge in one place.
+
+</Section>

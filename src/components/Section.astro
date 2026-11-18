@@ -1,0 +1,14 @@
+---
+// A block with a label on the left and the content on the right, e.g.
+//   <Section label="How I can help"> …markdown… </Section>
+interface Props {
+	label: string;
+	id?: string;
+}
+const { label, id } = Astro.props;
+---
+
+<section class="section" id={id}>
+	<h2 class="label">{label}</h2>
+	<div class="body"><slot /></div>
+</section>

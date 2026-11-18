@@ -1,25 +1,36 @@
 # berkmonder.com
 
-My site: what I offer (consulting, builds and training for AI in production), my work, the blog, and
-free lessons. Astro, static, served by Caddy on my VPS.
+My site: what I offer (consulting, builds and training for AI in production), my work, the blog, free
+lessons, and the status of my services. The whole site is [Starlight](https://starlight.astro.build)
+(Astro), built to static files and served by Caddy on my VPS.
 
-## Where things are
+## Changing things
 
-| What | Where |
+| To… | Do this |
 |---|---|
-| Name, email, socials, main navigation | `src/site.ts` |
-| Services, how an engagement works, FAQ | `src/data/services.ts` |
-| Work (cards on `/work`; `featured` ones on the home page) | `src/data/work.ts` |
-| Pages | `src/pages/` (`index`, `services`, `work`, `about`, `blog/`) |
-| Blog posts | `src/content/blog/<slug>.mdx` → `/blog/<slug>`; `draft: true` keeps one unpublished, `youtube: <id>` puts a video on top |
-| Lessons (Starlight) | `src/content/docs/learn/<slug>.mdx` → `/learn/<slug>`; the sidebar fills itself |
-| Look (colors, fonts, buttons, cards) | `src/styles/global.css`; the same colors for the lessons in `src/styles/starlight.css` |
-| Link-preview image | `public/og.png`, made by `node scripts/og.mjs public/og.png` |
-| CV | `public/files/resume_muhammedBerkOnder.pdf` |
+| Edit a page | `src/content/docs/<page>.mdx` (`index` is the home page) |
+| Add a page | add `src/content/docs/<name>.mdx` with a `title`, then add it to `sidebar` in `astro.config.ts` |
+| Write a blog post | add `src/content/docs/blog/<slug>.mdx` with `title`, `date` and `authors: berk`; `draft: true` keeps it unpublished |
+| Add a lesson | add `src/content/docs/learn/<slug>.mdx`; it shows up in the menu by itself |
+| Put a video on a page | `import { YouTube } from "@astro-community/astro-embed-youtube";` then `<YouTube id="…" />` |
+| Change colors or fonts | `src/styles/theme.css` (Starlight's color variables, dark first, then light) |
+| Change the menu, links, title | `astro.config.ts` |
+| Replace the CV | `public/files/resume_muhammedBerkOnder.pdf` |
+| Remake the link-preview image | `node scripts/og.mjs public/og.png` |
 
-Every page except the lessons uses `src/layouts/Base.astro`. The lessons are Starlight's, with the site's
-name and navigation in its header (`src/components/starlight/`). Light/dark follows the system until a
-visitor picks one; the choice is shared between both.
+Pages are Markdown with a few components: Starlight's own (`Card`, `CardGrid`, `LinkButton`, `Steps`,
+`Badge`; see [its docs](https://starlight.astro.build/components/using-components/)) and one of mine,
+`<Section label="…">` (a label on the left, the content on the right).
+
+## The moving parts
+
+- `src/components/Assistant.tsx`: the chat in the bottom-right corner (on every page, through
+  `src/components/Footer.astro`). It talks to turquoise's API at `/api` (`/api/chat`, `/api/status`,
+  `/api/contact`); any link to `#ask` opens it.
+- `src/components/Status.tsx`: the board on `/status`. The checks themselves are
+  [Upptime](https://github.com/berkmonder/status)'s, run by GitHub every 5 minutes; this shows their
+  history and incidents, and whether my GPU is on.
+- `src/routeData.ts`: keeps the site's menu on blog pages.
 
 ## Run it
 
@@ -27,7 +38,7 @@ Astro needs Node ≥ 22.23.4 (the image uses Node 24):
 
 ```bash
 pnpm install
-pnpm dev     # http://localhost:4321
+pnpm dev     # http://localhost:4321; /api goes to the live API
 pnpm build   # type-check, then build into dist/
 ```
 
@@ -35,4 +46,4 @@ pnpm build   # type-check, then build into dist/
 
 Push to `main`: CI builds the image (`Containerfile`: build with Node, serve with Caddy), checks it answers,
 and publishes it to `ghcr.io/berkmonder/berkmonder`. The VPS runs each new version within about 4
-minutes (nix-dotfiles: `hosts/vps/apps.nix`, `apps.berkmonder`).
+minutes (nix-dotfiles: `hosts/vps/apps.nix`, `apps.berkmonder`, which also sends `/api` to turquoise).
