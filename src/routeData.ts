@@ -1,21 +1,32 @@
 import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
 
-// On blog pages, the blog plugin replaces the left menu with its own (all posts, recent posts, tags).
-// This keeps the site's menu and puts the blog's under "Blog" instead.
-export const onRequest = defineRouteMiddleware(async ({ locals }, next) => {
-	const site = locals.starlightRoute.sidebar;
-	await next(); // the blog plugin runs here
-	const blog = locals.starlightRoute.sidebar;
-	if (blog === site) return; // not a blog page
-	locals.starlightRoute.sidebar = site.map((entry) =>
-		entry.type === "link" && entry.label === "Blog"
+// The left menu is the flat, numbered list in astro.config.ts ([1] Home … [8] Status). Only on /learn/
+// pages does Learn open into its lessons; everywhere else it is a plain link. Pages that aren't in the
+// menu themselves (a blog post) mark their section (Blog) instead.
+export const onRequest = defineRouteMiddleware(({ locals, url }) => {
+	const route = locals.starlightRoute;
+	const inLearn = /^\/learn(\/|$)/.test(url.pathname);
+	const rail = route.sidebar.map((entry) =>
+		entry.type === "group" && entry.label === "Learn" && !inLearn
 			? {
-					type: "group",
-					label: "Blog",
-					entries: blog,
-					collapsed: false,
+					type: "link" as const,
+					label: "Learn",
+					href: "/learn/",
+					isCurrent: false,
 					badge: undefined,
+					attrs: {},
 				}
 			: entry,
 	);
+	const inMenu = rail.some((entry) => entry.type === "link" && entry.isCurrent);
+	route.sidebar =
+		inLearn || inMenu
+			? rail
+			: rail.map((entry) =>
+					entry.type === "link" &&
+					entry.href !== "/" &&
+					url.pathname.startsWith(entry.href)
+						? { ...entry, isCurrent: true }
+						: entry,
+				);
 });

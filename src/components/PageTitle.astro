@@ -1,0 +1,46 @@
+---
+// Starlight's page title; under a blog post's, its date and tags (each tag opens the blog filtered by it).
+import Default from "@astrojs/starlight/components/PageTitle.astro";
+import { formatDate } from "../blog";
+
+const { id, data } = Astro.locals.starlightRoute.entry;
+const date = id.startsWith("blog/") ? data.date : undefined;
+---
+
+<Default />
+{
+	date && (
+		<p class="post-meta">
+			<time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time>
+			{data.tags.map((tag) => (
+				<a href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+			))}
+		</p>
+	)
+}
+
+<style>
+	.post-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 1rem;
+		margin-top: 0.5rem;
+		font-family: var(--font-ui);
+		font-size: 0.85rem;
+		color: var(--sl-color-gray-3);
+	}
+
+	.post-meta a {
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+	}
+
+	.post-meta a::before {
+		content: "#";
+		color: var(--sl-color-gray-4);
+	}
+
+	.post-meta a:hover {
+		color: var(--sl-color-text-accent);
+	}
+</style>

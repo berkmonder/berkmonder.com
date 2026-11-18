@@ -12,7 +12,7 @@ const DAYS = 30;
 // What each check is, in words (by Upptime's slug). Others show their address.
 const ABOUT: Record<string, string> = {
 	"berkmonder-com": "This website",
-	"turquoise-api": "The API behind the assistant and the demos",
+	"turquoise-api": "The assistant's API",
 	"turquoise-berkmonder-com": "The old demo site's address",
 };
 

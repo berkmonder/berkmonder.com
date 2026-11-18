@@ -52,7 +52,6 @@ h4,
 .sl-link-button,
 .card .title,
 .sl-badge,
-starlight-theme-select,
 .label {
 	font-family: var(--font-ui);
 }
@@ -129,7 +128,7 @@ h1#_top {
 }
 
 .sidebar-content .top-level > li > a::before,
-.sidebar-content .top-level > li > details > summary .group-label::before {
+.sidebar-content .top-level > li > details > summary .large::before {
 	content: "[" counter(nav) "]";
 	margin-inline-end: 0.75em;
 	color: var(--sl-color-gray-4);
@@ -140,8 +139,6 @@ h1#_top {
 }
 
 .sidebar-content .top-level > li > details > summary .group-label .large {
-	font-size: 0.875rem;
-	font-weight: 400;
 	color: var(--sl-color-gray-2);
 }
 

@@ -1,0 +1,81 @@
+---
+// One button for dark and light, in place of Starlight's three-way menu. Starlight's script in <head>
+// has already picked the theme: the visitor's last choice here, otherwise their system's setting.
+import { Icon } from "@astrojs/starlight/components";
+---
+
+<theme-toggle>
+	<button type="button" aria-label="Dark theme" title="Dark theme" aria-pressed="true">
+		<Icon name="moon" class="moon" />
+		<Icon name="sun" class="sun" />
+	</button>
+</theme-toggle>
+
+<script>
+	const root = document.documentElement;
+	const key = "starlight-theme"; // where Starlight's script looks for the visitor's choice
+
+	function showState() {
+		for (const button of document.querySelectorAll("theme-toggle button")) {
+			button.setAttribute("aria-pressed", String(root.dataset.theme !== "light"));
+		}
+	}
+
+	class ThemeToggle extends HTMLElement {
+		connectedCallback() {
+			showState();
+			this.querySelector("button")?.addEventListener("click", () => {
+				const theme = root.dataset.theme === "light" ? "dark" : "light";
+				root.dataset.theme = theme;
+				try {
+					localStorage.setItem(key, theme);
+				} catch {
+					// private browsing: the choice lasts for this page only
+				}
+				showState();
+			});
+		}
+	}
+	customElements.define("theme-toggle", ThemeToggle);
+
+	// Until the visitor picks a theme, follow their system's setting when it changes.
+	matchMedia("(prefers-color-scheme: light)").addEventListener("change", (event) => {
+		let chosen = null;
+		try {
+			chosen = localStorage.getItem(key);
+		} catch {}
+		if (chosen) return;
+		root.dataset.theme = event.matches ? "light" : "dark";
+		showState();
+	});
+</script>
+
+<style>
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--radius);
+		background: transparent;
+		color: var(--sl-color-gray-2);
+		cursor: pointer;
+	}
+
+	button:hover {
+		color: var(--sl-color-white);
+	}
+
+	button :global(svg) {
+		font-size: 1.15rem;
+	}
+
+	/* The icon shows the theme in use */
+	:global([data-theme="light"]) theme-toggle :global(.moon),
+	:global([data-theme="dark"]) theme-toggle :global(.sun) {
+		display: none;
+	}
+</style>
