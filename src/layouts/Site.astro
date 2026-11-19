@@ -73,17 +73,11 @@ const url = new URL(Astro.url.pathname, Astro.site);
 </html>
 
 <style>
-	/* The page's column is centered in the window (the menu stays at the left edge); on narrower
-	   windows it moves right so it never runs under the menu. */
+	/* The menu (fixed) and the page's column sit side by side, centered in the window (site.css: --edge) */
 	main {
 		max-width: var(--page);
-		margin-inline: auto;
+		margin-left: calc(var(--edge) + var(--rail));
 		padding: 4.5rem 2rem 6rem;
-	}
-	@media (max-width: 88rem) {
-		main {
-			margin-left: var(--rail);
-		}
 	}
 	@media (max-width: 52rem) {
 		main {
