@@ -1,0 +1,125 @@
+/* The CV's look (cv/build.py renders cv.md with it). One column, real text, no icons or tables, so
+   applicant tracking systems read it in order; a calm, readable layout for people. */
+
+@font-face { font-family: Inter; font-weight: 400; src: url(fonts/inter-latin-400-normal.woff2); }
+@font-face { font-family: "Inter Ext"; font-weight: 400; src: url(fonts/inter-latin-ext-400-normal.woff2); }
+@font-face { font-family: Inter; font-weight: 400; font-style: italic; src: url(fonts/inter-latin-400-italic.woff2); }
+@font-face { font-family: "Inter Ext"; font-weight: 400; font-style: italic; src: url(fonts/inter-latin-ext-400-italic.woff2); }
+@font-face { font-family: Inter; font-weight: 500; src: url(fonts/inter-latin-500-normal.woff2); }
+@font-face { font-family: "Inter Ext"; font-weight: 500; src: url(fonts/inter-latin-ext-500-normal.woff2); }
+@font-face { font-family: Inter; font-weight: 600; src: url(fonts/inter-latin-600-normal.woff2); }
+@font-face { font-family: "Inter Ext"; font-weight: 600; src: url(fonts/inter-latin-ext-600-normal.woff2); }
+@font-face { font-family: Inter; font-weight: 700; src: url(fonts/inter-latin-700-normal.woff2); }
+@font-face { font-family: "Inter Ext"; font-weight: 700; src: url(fonts/inter-latin-ext-700-normal.woff2); }
+
+@page {
+	size: A4;
+	margin: 14mm 17mm 14mm;
+}
+
+html {
+	font-family: Inter, "Inter Ext", sans-serif; /* "Inter Ext": the letters beyond Latin-1, like İ ş ğ */
+	font-size: 9.6pt;
+	line-height: 1.42;
+	color: #1d1f21;
+}
+
+body {
+	margin: 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* Name, title, contact */
+h1 {
+	margin: 0;
+	font-size: 21pt;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	color: #111;
+}
+
+h1 + p {
+	margin: 0.15em 0 0;
+	font-size: 11pt;
+	color: #0b6b63;
+}
+
+h1 + p strong {
+	font-weight: 500;
+}
+
+h1 + p + p {
+	margin: 0.4em 0 0;
+	font-size: 8.8pt;
+	color: #4a4f54;
+}
+
+/* Sections */
+h2 {
+	margin: 1.25em 0 0.55em;
+	padding-bottom: 0.25em;
+	border-bottom: 0.6pt solid #cfd4d8;
+	font-size: 8.6pt;
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: #0b6b63;
+}
+
+h2 + p {
+	margin: 0;
+}
+
+/* An entry: role and place, then its dates on the next line */
+h3 {
+	margin: 0.85em 0 0;
+	font-size: 10.2pt;
+	font-weight: 600;
+	color: #111;
+	break-after: avoid;
+}
+
+h2 + h3 {
+	margin-top: 0;
+}
+
+h3 + p {
+	margin: 0.05em 0 0.25em;
+	font-size: 8.8pt;
+	color: #5c6166;
+	break-after: avoid;
+}
+
+h3 + p em {
+	font-style: normal;
+}
+
+ul {
+	margin: 0.2em 0 0;
+	padding-left: 1.05em;
+}
+
+li {
+	margin: 0.18em 0;
+	padding-left: 0.15em;
+	break-inside: avoid;
+}
+
+li::marker {
+	color: #8a9096;
+}
+
+li strong {
+	font-weight: 600;
+	color: #111;
+}
+
+/* Skills: one line per group */
+h2:last-of-type + ul {
+	list-style: none;
+	padding-left: 0;
+}
