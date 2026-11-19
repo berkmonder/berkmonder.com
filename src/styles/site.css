@@ -17,8 +17,8 @@
 
 	--mono: "Geist Mono Variable", ui-monospace, monospace;
 	--sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-	--rail: 15rem;
-	--content: 46rem;
+	--rail: 15rem; /* the menu's width */
+	--page: 58rem; /* the page's column, centered in the window */
 	--radius: 4px;
 
 	/* The chat (turquoise) takes its colors from these names (Starlight's, as on /learn). */

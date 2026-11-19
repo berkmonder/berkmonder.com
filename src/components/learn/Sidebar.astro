@@ -1,9 +1,17 @@
 ---
-// Learn's menu: the subject dropdown (the starlight-sidebar-topics-dropdown plugin), then the subject's
-// pages (Starlight's own menu). The subjects are set in astro.config.ts.
+// Learn's menu: the subject's pages (Starlight's own menu). On phones the subject dropdown sits at its
+// top; on wider screens it's in the top row (Header.astro). The subjects are set in astro.config.ts.
 import Default from "@astrojs/starlight/components/Sidebar.astro";
 import TopicsDropdown from "starlight-sidebar-topics-dropdown/TopicsDropdown.astro";
 ---
 
-<TopicsDropdown />
+<div class="topics"><TopicsDropdown /></div>
 <Default><slot /></Default>
+
+<style>
+	@media (min-width: 50rem) {
+		.topics {
+			display: none;
+		}
+	}
+</style>

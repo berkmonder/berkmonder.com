@@ -5,7 +5,7 @@ Astro, built to static files and served by Caddy on my VPS.
 
 Two parts:
 
-- **The site**: home, about, Turquoise, status (in English at `/`, in Turkish at `/tr/`) and the blog
+- **The site**: home, about, Turquoise, status (in Turkish at `/`, in English at `/en/`) and the blog
   (Turkish). Plain Astro pages around one layout: the numbered menu on the left, the page on the right.
 - **Learn** (`/learn`, Turkish): [Starlight](https://starlight.astro.build), like a documentation site.
   A dropdown picks the subject; each subject's folders are the categories in its menu; each page has its
@@ -15,7 +15,8 @@ Two parts:
 
 | To… | Do this |
 |---|---|
-| Change a page's text | `src/views/<Page>.astro`: the English and Turkish text are at the top, the layout below |
+| Change a page's text | `src/views/<Page>.astro`: the Turkish and English text are at the top, the layout below |
+| Change what the chat suggests on a page | `assistant` in that page's view (its suggested questions, and the button's label) |
 | Change the menu or words on every page | `src/i18n.ts` |
 | Write a blog post | add `src/content/blog/<slug>.md` with `title`, `description`, `date` and `tags: [a, b]`; `draft: true` keeps it out of the built site (it still shows in `pnpm dev`) |
 | Add a lesson | add `src/content/docs/learn/<subject>/<category>/<page>.mdx` with a `title`; a new folder is a new category in the menu; `draft: true` keeps it unpublished |
@@ -29,13 +30,13 @@ Two parts:
 
 ```
 astro.config.ts            Learn (Starlight): its subjects, llms.txt; redirects; the dev proxy
-src/pages/                 the site's addresses: index, about, turquoise, status (and tr/ for Turkish),
+src/pages/                 the site's addresses: index, about, turquoise, status (and en/ for English),
                            blog/ (list, posts, rss.xml), 404
 src/views/                 those pages' text and layout (Home, About, Turquoise, Status)
 src/layouts/Site.astro     around every page of the site: <head>, the menu, the chat's script
 src/components/            Rail (the menu: press 1–4 to go to a page), StatusLink (the status in the menu),
-                           ThemeButton (dark/light), Status.tsx (the status board), learn/ (Learn's menu
-                           with its subject dropdown, and its theme button)
+                           ThemeButton (dark/light), Status.tsx (the status board), learn/ (Learn's top
+                           row, menu and theme button)
 src/content/blog/          blog posts
 src/content/docs/learn/    Learn's pages: <subject>/<category>/<page>.mdx
 src/i18n.ts                the two languages: the menu and the words every page uses
@@ -44,7 +45,9 @@ public/                    files served as they are (CV, images, favicon)
 
 - **The chat** is [turquoise](https://github.com/berkmonder/turquoise), a separate app. Every page loads
   its script, `/widget/turquoise.js`, which puts the chat button in the bottom-right corner (or the chat
-  itself in a `<div data-turquoise-inline>`, as on `/turquoise/`); a link to `#ask` opens it. On the
+  itself in a `<div data-turquoise-inline>`, as on `/turquoise/`); a link to `#ask` opens it. It speaks the
+  page's language, knows which page it's on, and takes the page's suggestions and label from
+  `<meta name="turquoise:suggestions">` and `<meta name="turquoise:label">` (set by `assistant` in the views). On the
   server, `/api` and `/widget` go to turquoise (nix-dotfiles: `hosts/vps/apps.nix`). If turquoise is
   down, the site works without the chat.
 - **The status** (the menu's "Normal", and `/status`): the checks are

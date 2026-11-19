@@ -1,5 +1,5 @@
 ---
-// About me, in English (/about/) and Turkish (/tr/about/). The text is here, the layout below it.
+// About me, in Turkish (/about/) and English (/en/about/). The text is here, the layout below it.
 import { type Lang, path } from "../i18n";
 import Site from "../layouts/Site.astro";
 
@@ -107,9 +107,29 @@ const text = {
 		],
 	},
 }[lang];
+
+// The chat on this page: its suggested questions (and button label).
+const assistant = {
+	en: {
+		label: "Ask about Berk",
+		suggestions: [
+			"Where does Berk work?",
+			"What is Berk good at?",
+			"How can I reach Berk?",
+		],
+	},
+	tr: {
+		label: "Berk hakkında sor",
+		suggestions: [
+			"Berk nerede çalışıyor?",
+			"Berk hangi konularda iyi?",
+			"Berk'e nasıl ulaşırım?",
+		],
+	},
+}[lang];
 ---
 
-<Site lang={lang} title={text.title} otherLanguage={path("/about/", lang === "en" ? "tr" : "en")}>
+<Site lang={lang} assistant={assistant} title={text.title} otherLanguage={path("/about/", lang === "en" ? "tr" : "en")}>
 	<h1>{text.title}</h1>
 	<div class="intro">
 		{text.intro.map((p) => <p>{p}</p>)}

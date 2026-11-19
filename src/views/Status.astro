@@ -1,5 +1,5 @@
 ---
-// The status page, in English (/status/) and Turkish (/tr/status/). The board itself is
+// The status page, in Turkish (/status/) and English (/en/status/). The board itself is
 // src/components/Status.tsx (it fills itself in the browser from Upptime's data).
 import StatusBoard from "../components/Status";
 import { type Lang, path } from "../i18n";
@@ -19,9 +19,27 @@ const text = {
 		note: "Upptime ile GitHub'ın sunucularından 5 dakikada bir kontrol ediliyor. Tüm geçmiş:",
 	},
 }[lang];
+
+// The chat on this page: its suggested questions (and button label).
+const assistant = {
+	en: {
+		suggestions: [
+			"Is everything up right now?",
+			"Is the GPU on?",
+			"When was the last outage?",
+		],
+	},
+	tr: {
+		suggestions: [
+			"Şu an her şey çalışıyor mu?",
+			"GPU açık mı?",
+			"Son kesinti ne zamandı?",
+		],
+	},
+}[lang];
 ---
 
-<Site lang={lang} title={text.title} otherLanguage={path("/status/", lang === "en" ? "tr" : "en")} wide>
+<Site lang={lang} assistant={assistant} title={text.title} otherLanguage={path("/status/", lang === "en" ? "tr" : "en")}>
 	<StatusBoard client:load lang={lang} />
 	<p class="note">{text.note} <a href="https://github.com/berkmonder/status">github.com/berkmonder/status</a></p>
 </Site>

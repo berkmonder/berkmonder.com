@@ -1,5 +1,5 @@
 ---
-// Turquoise, my assistant, in English (/turquoise/) and Turkish (/tr/turquoise/): what it is, how it
+// Turquoise, my assistant, in Turkish (/turquoise/) and English (/en/turquoise/): what it is, how it
 // works, and the chat itself (turquoise's script fills the <div data-turquoise-inline>).
 import { type Lang, path } from "../i18n";
 import Site from "../layouts/Site.astro";
@@ -71,9 +71,27 @@ const text = {
 		code: "Kodu",
 	},
 }[lang];
+
+// The chat on this page: its suggested questions (and button label).
+const assistant = {
+	en: {
+		suggestions: [
+			"How do you work?",
+			"Which tools do you have?",
+			"What happens when the GPU is off?",
+		],
+	},
+	tr: {
+		suggestions: [
+			"Nasıl çalışıyorsun?",
+			"Hangi araçların var?",
+			"GPU kapalıyken ne oluyor?",
+		],
+	},
+}[lang];
 ---
 
-<Site lang={lang} title={text.title} otherLanguage={path("/turquoise/", lang === "en" ? "tr" : "en")}>
+<Site lang={lang} assistant={assistant} title={text.title} otherLanguage={path("/turquoise/", lang === "en" ? "tr" : "en")}>
 	<h1>{text.title}</h1>
 	<p class="lead">{text.lead}</p>
 
