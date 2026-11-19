@@ -69,4 +69,16 @@ import ThemeButton from "../ThemeButton.astro";
 			width: 18rem;
 		}
 	}
+	/* Wide screens, pages with contents: the row follows the page's three columns (learn.css), so the
+	   search sits on top of the contents column */
+	@media (min-width: 72rem) {
+		:global([data-has-toc]) .learn-header {
+			display: grid;
+			grid-template-columns: 1fr calc(var(--sl-sidebar-width) - var(--sl-sidebar-pad-x));
+		}
+		:global([data-has-toc]) .end :global(site-search) {
+			flex: 1;
+			width: auto;
+		}
+	}
 </style>

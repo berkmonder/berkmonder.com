@@ -1,0 +1,47 @@
+---
+title: LLM nedir?
+description: Büyük dil modelleri ne yapar, ne yapmaz ve bir sistemin parçası olarak nasıl kullanılır.
+sidebar:
+  order: 1
+---
+
+Büyük dil modeli (*large language model*, LLM), bir metnin devamında hangi kelimenin geleceğini
+tahmin etmek üzere eğitilmiş bir sinir ağıdır. Kulağa basit geliyor; ama bu tahmini milyarlarca
+sayfa metin üzerinde öğrenen bir model, soru cevaplamayı, özetlemeyi, kod yazmayı ve talimat izlemeyi
+de öğrenmiş oluyor.
+
+## Kelime değil, token
+
+Model metni kelimelerle değil **token**'larla görür: kelime parçaları, noktalama işaretleri, boşluklar.
+Türkçe gibi eklemeli dillerde bir kelime çoğu zaman birkaç token'dır ("çalıştırmaktan" gibi). Bu iki
+şeyi etkiler:
+
+- **Bağlam penceresi:** modelin bir seferde görebildiği metin token cinsinden sınırlıdır.
+- **Maliyet ve hız:** bulutta token başına ödersin; kendi GPU'nda token sayısı süreyi belirler.
+
+## Model neyi bilir, neyi bilmez
+
+Model eğitim verisinde gördüğü kalıpları bilir; senin şirketinin belgelerini, dünkü haberleri ya da
+veritabanındaki kayıtları bilmez. Bilmediği bir şeyi sorduğunda da çoğu zaman susmaz, akla yatkın
+bir cevap uydurur. Buna **halüsinasyon** denir ve bir LLM'i güvenle kullanmanın ilk kuralı bunu hesaba
+katmaktır.
+
+Bu yüzden üretimdeki LLM sistemlerinin çoğu modeli tek başına kullanmaz:
+
+- **RAG (*retrieval-augmented generation*):** soruyla ilgili belgeleri önce aratır, modele bunlara
+  dayanarak cevap vermesini söylersin.
+- **Araçlar:** model bir fonksiyonu çağırmaya karar verir (arama, hesap, veritabanı sorgusu), sonucu
+  görür ve cevabına katar. Bunu adım adım yapan programlara **ajan** denir.
+
+Bu sitedeki asistan [Turquoise](/turquoise/) ikisini de yapıyor: okuduğun sayfayı ve siteyi arıyor,
+bulduğuna dayanarak cevap veriyor ve her adımını gösteriyor.
+
+## Açık ve kapalı modeller
+
+- **Kapalı modeller** (bulut API'leri) en güçlü seçenekler arasındadır; kurulum gerektirmez ama verin
+  sağlayıcıya gider ve token başına ödersin.
+- **Açık modeller** (Qwen, Llama, Mistral gibi) kendi makinende ya da sunucunda çalışır. Verin dışarı
+  çıkmaz, maliyetin donanımdır; karşılığında kurulum ve işletme senin işindir.
+
+Hangisinin doğru olduğu işe göre değişir: gizlilik, gecikme, maliyet ve gereken kalite. Sonraki
+derslerde bir açık modeli kendi GPU'nda çalıştırıp bir API olarak sunmayı göreceğiz.
