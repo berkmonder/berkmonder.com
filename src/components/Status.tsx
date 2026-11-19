@@ -1,85 +1,117 @@
-// The status board on /status. The checks are Upptime's (github.com/berkmonder/status): GitHub runs
-// them every 5 minutes, from outside my servers, and keeps the history in that repository. This reads
-// it live, adds whether my GPU is on (/api/status), and lists past incidents (Upptime opens an issue
-// for each).
+// The status board (/status, /tr/status). The checks are Upptime's (github.com/berkmonder/status):
+// GitHub runs them every 5 minutes, from outside my servers, and keeps their history there. This reads
+// it live: one bar per day for 30 days (hover for the day, click a red one for its incident), whether
+// my GPU is on (/api/status), and past incidents (Upptime opens a GitHub issue for each).
 
 import { useEffect, useState } from "react";
 import "./status.css";
 
-const REPO = "berkmonder/status";
-const DATA = `https://raw.githubusercontent.com/${REPO}/master`;
+const DATA = "https://raw.githubusercontent.com/berkmonder/status/master";
+const ISSUES =
+	"https://api.github.com/repos/berkmonder/status/issues?state=all&per_page=20";
 const DAYS = 30;
-// What each check is, in words (by Upptime's slug). Others show their address.
-const ABOUT: Record<string, string> = {
-	"berkmonder-com": "This website",
-	"turquoise-api": "The assistant's API",
-	"turquoise-berkmonder-com": "The old demo site's address",
+
+const WORDS = {
+	en: {
+		updated: "Updated",
+		allUp: "All systems operational",
+		someDown: "Some systems are down",
+		checking: "Checking…",
+		unavailable: "Status unavailable",
+		summaryUp: "berkmonder.com and Turquoise are running normally.",
+		summaryDown: "Something isn't answering. Details below.",
+		groups: { website: "Website", turquoise: "Turquoise" },
+		about: {
+			"berkmonder-com": "The website",
+			"turquoise-api": "The assistant's API",
+		} as Record<string, string>,
+		gpu: "Model on my GPU",
+		gpuAbout: "When it's off, the assistant answers from search",
+		gpuOn: "On",
+		gpuOff: "Off: quick answers",
+		live: "Live, not recorded",
+		ago: `${DAYS} days ago`,
+		today: "Today",
+		up: "Operational",
+		degraded: "Degraded",
+		down: "Outage",
+		none: "No data",
+		minutesDown: (m: string) => `${m} down`,
+		incidents: "Past incidents",
+		noIncidents: "None recorded.",
+		resolved: (d: string) => `resolved after ${d}`,
+		ongoing: "ongoing",
+		locale: "en-GB",
+	},
+	tr: {
+		updated: "Güncellendi",
+		allUp: "Tüm sistemler çalışıyor",
+		someDown: "Bazı sistemler çalışmıyor",
+		checking: "Kontrol ediliyor…",
+		unavailable: "Durum alınamadı",
+		summaryUp: "berkmonder.com ve Turquoise normal çalışıyor.",
+		summaryDown: "Bir şey cevap vermiyor. Ayrıntılar aşağıda.",
+		groups: { website: "Web sitesi", turquoise: "Turquoise" },
+		about: {
+			"berkmonder-com": "Web sitesi",
+			"turquoise-api": "Asistanın API'si",
+		} as Record<string, string>,
+		gpu: "GPU'mdaki model",
+		gpuAbout: "Kapalıyken asistan aramayla cevap verir",
+		gpuOn: "Açık",
+		gpuOff: "Kapalı: hızlı cevaplar",
+		live: "Anlık, kaydedilmiyor",
+		ago: `${DAYS} gün önce`,
+		today: "Bugün",
+		up: "Çalışıyor",
+		degraded: "Yavaş",
+		down: "Kesinti",
+		none: "Veri yok",
+		minutesDown: (m: string) => `${m} kesinti`,
+		incidents: "Geçmiş olaylar",
+		noIncidents: "Kayıt yok.",
+		resolved: (d: string) => `${d} sonra çözüldü`,
+		ongoing: "sürüyor",
+		locale: "tr-TR",
+	},
 };
 
 type Site = {
 	name: string;
-	url: string;
 	slug: string;
 	status: "up" | "down" | "degraded";
-	uptimeMonth: string;
 	time: number;
 	dailyMinutesDown: Record<string, number>;
 	start?: string;
 };
 type Incident = {
+	id: number;
 	title: string;
 	url: string;
 	opened: string;
 	closed: string | null;
 };
-type Gpu = "checking" | "on" | "off" | "unknown";
 
 const day = (offset: number) =>
 	new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
-const duration = (ms: number) => {
-	const minutes = Math.round(ms / 60_000);
-	return minutes < 60
-		? `${minutes} min`
-		: `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
-};
-const date = (iso: string) =>
-	new Date(iso).toLocaleDateString("en-GB", {
-		day: "numeric",
-		month: "short",
-		year: "numeric",
-	});
+const duration = (minutes: number) =>
+	minutes < 60
+		? `${Math.round(minutes)} min`
+		: `${Math.floor(minutes / 60)} h ${Math.round(minutes % 60)} min`;
 
-function Bars({ site }: { site: Site }) {
-	const days = Array.from({ length: DAYS }, (_, i) => day(DAYS - 1 - i));
-	return (
-		<div className="status-bars">
-			{days.map((d) => {
-				const down = site.dailyMinutesDown[d] ?? 0;
-				const kind =
-					site.start && d < site.start
-						? "none"
-						: down === 0
-							? "up"
-							: down < 60
-								? "partial"
-								: "down";
-				const label =
-					kind === "none"
-						? "no data"
-						: down
-							? `${duration(down * 60_000)} down`
-							: "no downtime";
-				return <span key={d} className={kind} title={`${date(d)}: ${label}`} />;
-			})}
-		</div>
-	);
-}
-
-export default function Status() {
+export default function Status({ lang = "en" }: { lang?: "en" | "tr" }) {
+	const w = WORDS[lang];
 	const [sites, setSites] = useState<Site[] | null>(null);
-	const [incidents, setIncidents] = useState<Incident[]>([]);
-	const [gpu, setGpu] = useState<Gpu>("checking");
 	const [failed, setFailed] = useState(false);
+	const [incidents, setIncidents] = useState<Incident[]>([]);
+	const [gpu, setGpu] = useState<"on" | "off" | "unknown" | null>(null);
+	const [updated, setUpdated] = useState<Date | null>(null);
+	const date = (iso: string, withYear = true) =>
+		new Date(iso).toLocaleDateString(w.locale, {
+			day: "numeric",
+			month: "short",
+			...(withYear && { year: "numeric" }),
+		});
 
 	useEffect(() => {
 		fetch(`${DATA}/history/summary.json`)
@@ -95,15 +127,17 @@ export default function Status() {
 					),
 				);
 				setSites(list.map((s, i) => ({ ...s, start: starts[i] })));
+				setUpdated(new Date());
 			})
 			.catch(() => setFailed(true));
-		fetch(`https://api.github.com/repos/${REPO}/issues?state=all&per_page=10`)
+		fetch(ISSUES)
 			.then((r) => (r.ok ? r.json() : []))
 			.then((issues: any[]) =>
 				setIncidents(
 					issues
 						.filter((i) => !i.pull_request)
 						.map((i) => ({
+							id: i.number,
 							title: i.title.replace(/^\W+/u, ""),
 							url: i.html_url,
 							opened: i.created_at,
@@ -118,101 +152,147 @@ export default function Status() {
 			.catch(() => setGpu("unknown"));
 	}, []);
 
-	const down = sites?.filter((s) => s.status !== "up") ?? [];
-	const headline = !sites
-		? failed
-			? "Status unavailable"
-			: "Checking…"
-		: down.length
-			? `${down.map((s) => s.name).join(", ")}: down`
-			: "All systems operational";
+	const down = sites?.some((s) => s.status === "down");
+	const headline = sites
+		? down
+			? w.someDown
+			: w.allUp
+		: failed
+			? w.unavailable
+			: w.checking;
+	const incidentOn = (site: Site, d: string) =>
+		incidents.find(
+			(i) =>
+				i.opened.slice(0, 10) === d &&
+				i.title.toLowerCase().includes(site.name.toLowerCase()),
+		);
+	const groups = [
+		{
+			name: w.groups.website,
+			sites: sites?.filter((s) => !s.slug.includes("turquoise")) ?? [],
+		},
+		{
+			name: w.groups.turquoise,
+			sites: sites?.filter((s) => s.slug.includes("turquoise")) ?? [],
+			gpu: true,
+		},
+	];
+	const days = Array.from({ length: DAYS }, (_, i) => day(DAYS - 1 - i));
 
 	return (
-		<div className="status not-content">
-			<p
-				className={`status-headline ${!sites ? "" : down.length ? "is-down" : "is-up"}`}
-			>
-				<span aria-hidden="true" />
-				{headline}
+		<div className="status">
+			<p className="status-updated">
+				<span
+					className={`dot ${sites ? (down ? "down" : "up") : ""}`}
+					aria-hidden="true"
+				/>
+				{updated
+					? `${w.updated} ${updated.toLocaleTimeString(w.locale, { hour: "2-digit", minute: "2-digit" })}`
+					: " "}
 			</p>
+			<h1>{headline}</h1>
+			{sites && (
+				<p className="status-summary">{down ? w.summaryDown : w.summaryUp}</p>
+			)}
 
-			<div className="status-table">
-				<div className="status-row status-head">
-					<span>Service</span>
-					<span className="status-range">
-						<span>{DAYS} days ago</span>
-						<span>Today</span>
-					</span>
-					<span />
-				</div>
-				{sites?.map((s) => (
-					<div className="status-row" key={s.slug}>
-						<div>
-							<strong>{s.name}</strong>
-							<small>{ABOUT[s.slug] ?? new URL(s.url).host}</small>
-						</div>
-						<Bars site={s} />
-						<div className="status-state">
-							<span className={s.status === "up" ? "up" : "down"}>
-								{s.status === "up" ? "Operational" : "Down"}
-							</span>
-							<small>
-								{s.uptimeMonth} · {s.time} ms
-							</small>
-						</div>
-					</div>
-				))}
-				<div className="status-row">
-					<div>
-						<strong>Assistant model</strong>
-						<small>
-							The LLM on my own GPU. When it's off, the assistant answers from
-							my CV.
-						</small>
-					</div>
-					<div className="status-note">Live, not recorded</div>
-					<div className="status-state">
-						<span
-							className={
-								gpu === "on" ? "up" : gpu === "off" ? "partial" : "none"
-							}
-						>
-							{
-								{
-									checking: "Checking…",
-									on: "Online",
-									off: "Off: quick answers",
-									unknown: "Unknown",
-								}[gpu]
-							}
+			{groups.map((group) => (
+				<section className="status-group" key={group.name}>
+					<div className="status-row status-head">
+						<span>{group.name}</span>
+						<span className="range">
+							<span>{w.ago}</span>
+							<span>{w.today}</span>
 						</span>
+						<span />
 					</div>
-				</div>
-			</div>
+					{group.sites.map((site) => (
+						<div className="status-row" key={site.slug}>
+							<div className="name">
+								<strong>{site.name}</strong>
+								<small>{w.about[site.slug] ?? site.slug}</small>
+							</div>
+							<div className="bars">
+								{days.map((d) => {
+									const minutes = site.dailyMinutesDown[d] ?? 0;
+									const kind =
+										site.start && d < site.start
+											? "none"
+											: minutes === 0
+												? "up"
+												: minutes < 60
+													? "degraded"
+													: "down";
+									const tip = `${date(d, false)} · ${kind === "none" ? w.none : minutes ? w.minutesDown(duration(minutes)) : w.up}`;
+									const incident = incidentOn(site, d);
+									return incident ? (
+										<a
+											key={d}
+											className={`bar ${kind}`}
+											data-tip={tip}
+											href={`#incident-${incident.id}`}
+										>
+											<span className="sr-only">{tip}</span>
+										</a>
+									) : (
+										<span key={d} className={`bar ${kind}`} data-tip={tip} />
+									);
+								})}
+							</div>
+							<div className="state">
+								<span className={`label ${site.status}`}>{w[site.status]}</span>
+								<small>{site.time} ms</small>
+							</div>
+						</div>
+					))}
+					{group.gpu && (
+						<div className="status-row">
+							<div className="name">
+								<strong>{w.gpu}</strong>
+								<small>{w.gpuAbout}</small>
+							</div>
+							<div className="live">{w.live}</div>
+							<div className="state">
+								<span
+									className={`label ${gpu === "on" ? "up" : gpu === "off" ? "degraded" : "none"}`}
+								>
+									{gpu === "on" ? w.gpuOn : gpu === "off" ? w.gpuOff : "…"}
+								</span>
+							</div>
+						</div>
+					)}
+				</section>
+			))}
 
 			<p className="status-legend">
-				<span className="up" /> No downtime <span className="partial" /> Under
-				an hour down <span className="down" /> An hour or more{" "}
-				<span className="none" /> No data
+				<span className="none" /> {w.none} <span className="down" /> {w.down}{" "}
+				<span className="degraded" /> {w.degraded} <span className="up" />{" "}
+				{w.up}
 			</p>
 
-			<h2>Past incidents</h2>
+			<h2 className="status-incidents-title">{w.incidents}</h2>
 			{incidents.length === 0 ? (
-				<p className="status-empty">None recorded.</p>
+				<p className="status-empty">{w.noIncidents}</p>
 			) : (
-				<ul className="status-incidents">
+				<ol className="status-incidents">
 					{incidents.map((i) => (
-						<li key={i.url}>
+						<li key={i.id} id={`incident-${i.id}`}>
 							<time dateTime={i.opened}>{date(i.opened)}</time>
-							<a href={i.url}>{i.title}</a>
-							<span>
-								{i.closed
-									? `resolved after ${duration(Date.parse(i.closed) - Date.parse(i.opened))}`
-									: "ongoing"}
-							</span>
+							<div>
+								<a href={i.url}>{i.title}</a>
+								<small>
+									{i.closed
+										? w.resolved(
+												duration(
+													(Date.parse(i.closed) - Date.parse(i.opened)) /
+														60_000,
+												),
+											)
+										: w.ongoing}
+								</small>
+							</div>
 						</li>
 					))}
-				</ul>
+				</ol>
 			)}
 		</div>
 	);

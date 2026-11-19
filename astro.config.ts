@@ -1,60 +1,101 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
+import starlightLlmsTxt from "starlight-llms-txt";
+import starlightSidebarTopics from "starlight-sidebar-topics";
 
-// Where `pnpm dev` sends /api and /widget: the live turquoise, or another one with
-// `TURQUOISE_URL=http://… pnpm dev`.
+// Two parts:
+// - the site itself (home, about, turquoise, status, blog): plain Astro pages in src/pages, around
+//   src/layouts/Site.astro;
+// - Learn (/learn): Starlight, in Turkish. Its pages are src/content/docs/learn/<subject>/; each
+//   subfolder of a subject is a category in its menu.
+
+// The chat (turquoise, a separate app) and, when developing, where its files come from.
 const turquoise = process.env.TURQUOISE_URL ?? "https://berkmonder.com";
+const chat = {
+	tag: "script",
+	attrs: { type: "module", src: "/widget/turquoise.js" },
+} as const;
 
-// The whole site is Starlight: every page is a Markdown/MDX file in src/content/docs (the blog's list
-// and feed are in src/pages/blog). The left menu is `sidebar` below. The status board is React; the
-// chat comes from turquoise (/widget/turquoise.js).
 export default defineConfig({
 	site: "https://berkmonder.com",
 	integrations: [
 		starlight({
 			title: "Berk Önder",
-			description:
-				"AI/ML engineer: I build LLM and agent systems, run machine learning in production, and train teams to own it.",
+			description: "Türkçe dersler: LLM'ler ve ajanlar, MLOps, altyapı.",
+			locales: { root: { label: "Türkçe", lang: "tr-TR" } }, // "tr-TR", not "tr": /tr/ is the site's Turkish pages
 			logo: { src: "./src/assets/mark.svg" },
 			favicon: "/favicon.svg",
 			social: [
-				{
-					icon: "linkedin",
-					label: "LinkedIn",
-					href: "https://www.linkedin.com/in/berkmonder",
-				},
 				{
 					icon: "github",
 					label: "GitHub",
 					href: "https://github.com/berkmonder",
 				},
+				{
+					icon: "linkedin",
+					label: "LinkedIn",
+					href: "https://www.linkedin.com/in/berkmonder",
+				},
 			],
-			// The left menu, numbered [1]…[8]. Learn lists its lessons only on /learn/ pages; everywhere
-			// else it is a plain link (src/routeData.ts).
-			sidebar: [
-				{ label: "Home", link: "/" },
-				{ label: "Services", link: "/services/" },
-				{ label: "Work", link: "/work/" },
-				{ label: "Turquoise", link: "/turquoise/" },
-				{ label: "Blog", link: "/blog/" },
-				{ label: "Learn", items: [{ autogenerate: { directory: "learn" } }] },
-				{ label: "About", link: "/about/" },
-				{ label: "Status", link: "/status/" },
+			plugins: [
+				// The subjects: the dropdown at the top of Learn's menu (src/components/learn/Sidebar.astro).
+				starlightSidebarTopics(
+					[
+						{
+							label: "LLM'ler ve ajanlar",
+							link: "/learn/llm/",
+							items: [{ autogenerate: { directory: "learn/llm" } }], // its folders are the categories
+						},
+						{
+							label: "MLOps",
+							link: "/learn/mlops/",
+							items: [{ autogenerate: { directory: "learn/mlops" } }], // its folders are the categories
+						},
+						{
+							label: "Altyapı",
+							link: "/learn/altyapi/",
+							items: [{ autogenerate: { directory: "learn/altyapi" } }], // its folders are the categories
+						},
+					],
+					{ exclude: ["/learn"] }, // Learn's front page lists the subjects instead
+				),
+				// /llms.txt (and -full, -small): the site in plain text, for language models.
+				starlightLlmsTxt({
+					projectName: "Berk Önder",
+					description:
+						"Berk Önder is an AI/ML engineer in Istanbul. This site has his lessons (Learn, in Turkish), blog, an assistant (Turquoise) and the status of his services.",
+					optionalLinks: [
+						{
+							label: "About",
+							url: "https://berkmonder.com/about/",
+							description: "Experience, education, skills, CV",
+						},
+						{
+							label: "Turquoise",
+							url: "https://berkmonder.com/turquoise/",
+							description: "Berk's assistant, an agent with tools and RAG",
+						},
+						{
+							label: "Blog",
+							url: "https://berkmonder.com/blog/",
+							description: "Posts, in Turkish (RSS: /blog/rss.xml)",
+						},
+					],
+				}),
 			],
-			routeMiddleware: "./src/routeData.ts",
-			tableOfContents: false, // a page can turn it on: `tableOfContents: true` in its frontmatter
-			pagination: false, // no "Previous / Next" links under pages
 			components: {
-				ThemeSelect: "./src/components/ThemeSelect.astro", // one sun/moon button
-				PageTitle: "./src/components/PageTitle.astro", // blog posts: date and tags under the title
+				Sidebar: "./src/components/learn/Sidebar.astro",
+				ThemeSelect: "./src/components/learn/ThemeSelect.astro",
 			},
 			customCss: [
 				"@fontsource-variable/inter",
 				"@fontsource-variable/geist-mono",
-				"./src/styles/theme.css",
+				"./src/styles/learn.css",
 			],
+			disable404Route: true, // the site's own 404 page (src/pages/404.astro)
 			head: [
+				chat,
 				{
 					tag: "meta",
 					attrs: {
@@ -62,35 +103,18 @@ export default defineConfig({
 						content: "https://berkmonder.com/og.png",
 					},
 				},
-				{
-					tag: "meta",
-					attrs: { name: "twitter:card", content: "summary_large_image" },
-				},
-				{
-					tag: "link",
-					attrs: {
-						rel: "alternate",
-						type: "application/rss+xml",
-						title: "Berk Önder · Blog",
-						href: "/blog/rss.xml",
-					},
-				},
-				// The chat (turquoise): a bubble in the bottom-right corner; `<div data-turquoise-inline>`
-				// shows it inside a page instead, and links to #ask open it.
-				{
-					tag: "script",
-					attrs: { type: "module", src: "/widget/turquoise.js" },
-				},
 			],
 		}),
 		react(),
 	],
 	redirects: {
-		"/projects": "/work/",
+		"/services": "/",
+		"/work": "/about/",
+		"/projects": "/about/",
 		"/projects/turquoise": "/turquoise/",
 	},
 	vite: {
-		// `pnpm dev`: the chat and the status board talk to turquoise (see `turquoise` above).
+		// `pnpm dev`: the chat and the status board talk to the live turquoise (or TURQUOISE_URL's).
 		server: {
 			proxy: {
 				"/api": { target: turquoise, changeOrigin: true },

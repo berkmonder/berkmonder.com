@@ -1,66 +1,53 @@
 ---
-// The blog's front page: every post with its date, newest first, filterable by tag
-// (/blog/?tag=vps), and a button for the RSS feed. The posts are src/content/docs/blog/*.mdx.
-import { Badge, LinkButton } from "@astrojs/starlight/components";
-import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
-import { formatDate, getPosts } from "../../blog";
+// The blog (Turkish): every post with its date, newest first, filterable by tag (/blog/?tag=vps), and
+// the RSS feed. The posts are src/content/blog/*.md; drafts show only in `pnpm dev`.
+import { getCollection } from "astro:content";
+import Site from "../../layouts/Site.astro";
 
-const posts = await getPosts();
-const tags = [...new Set(posts.flatMap((post) => post.tags))].sort();
+const posts = (
+	await getCollection("blog", (p) => import.meta.env.DEV || !p.data.draft)
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+const date = (d: Date) =>
+	d.toLocaleDateString("tr-TR", {
+		day: "numeric",
+		month: "short",
+		year: "numeric",
+		timeZone: "UTC",
+	});
 ---
 
-<StarlightPage
-	frontmatter={{
-		title: "Blog",
-		description:
-			"Notes from building and running AI systems: LLMs, agents, MLOps and self-hosting.",
-	}}
->
-	<p>
-		Notes from building and running AI systems: what worked, what didn't, and how to set it up yourself.
-	</p>
+<Site lang="tr" title="Blog" description="Yapay zekâ sistemleri kurarken ve işletirken öğrendiklerim: LLM'ler, ajanlar, MLOps, altyapı.">
+	<h1>Blog</h1>
+	<p class="lead">Yapay zekâ sistemleri kurarken ve işletirken öğrendiklerim: neyin işe yaradığı, neyin yaramadığı ve kendiniz nasıl kurarsınız.</p>
 
-	<div class="bar not-content">
-		{
-			tags.length > 0 && (
-				<div class="tags" role="group" aria-label="Show posts tagged">
-					<button type="button" data-tag="" aria-pressed="true">
-						All
-					</button>
-					{tags.map((tag) => (
-						<button type="button" data-tag={tag} aria-pressed="false">
-							{tag}
-						</button>
-					))}
-				</div>
-			)
-		}
-		<LinkButton href="/blog/rss.xml" icon="rss" variant="secondary">
-			Subscribe (RSS)
-		</LinkButton>
+	<div class="bar">
+		<div class="tags" role="group" aria-label="Etikete göre göster">
+			<button type="button" data-tag="" aria-pressed="true">Hepsi</button>
+			{tags.map((tag) => <button type="button" data-tag={tag} aria-pressed="false">{tag}</button>)}
+		</div>
+		<a class="button" href="/blog/rss.xml">Abone ol (RSS)</a>
 	</div>
 
 	{
 		posts.length > 0 ? (
-			<ol class="posts not-content">
+			<ol class="posts">
 				{posts.map((post) => (
-					<li data-tags={JSON.stringify(post.tags)}>
-						<time datetime={post.date.toISOString().slice(0, 10)}>
-							{formatDate(post.date)}
-						</time>
+					<li data-tags={post.data.tags.join(" ")}>
+						<time datetime={post.data.date.toISOString().slice(0, 10)}>{date(post.data.date)}</time>
 						<div>
-							<a href={post.url}>{post.title}</a>
-							{post.draft && <Badge text="Draft" variant="caution" />}
-							{post.description && <p>{post.description}</p>}
+							<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+							{post.data.draft && <span class="draft">taslak</span>}
+							<p>{post.data.description}</p>
 						</div>
 					</li>
 				))}
 			</ol>
 		) : (
-			<p>No posts yet. The first ones are on their way: subscribe to hear when they're out.</p>
+			<p class="empty">Henüz yazı yok. İlkleri yolda: RSS ile abone olursanız çıktığında haberiniz olur.</p>
 		)
 	}
-</StarlightPage>
+</Site>
 
 <script>
 	// The tag buttons: show only the posts with that tag, and keep it in the address (?tag=…).
@@ -68,23 +55,17 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))].sort();
 	const posts = document.querySelectorAll<HTMLLIElement>(".posts li");
 
 	function show(tag: string) {
-		for (const button of buttons) {
-			button.setAttribute("aria-pressed", String(button.dataset.tag === tag));
-		}
-		for (const post of posts) {
-			post.hidden = tag !== "" && !JSON.parse(post.dataset.tags ?? "[]").includes(tag);
-		}
+		for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.tag === tag));
+		for (const p of posts) p.hidden = tag !== "" && !(p.dataset.tags ?? "").split(" ").includes(tag);
 		const url = new URL(location.href);
 		if (tag) url.searchParams.set("tag", tag);
 		else url.searchParams.delete("tag");
 		history.replaceState(null, "", url);
 	}
 
-	for (const button of buttons) {
-		button.addEventListener("click", () => show(button.dataset.tag ?? ""));
-	}
+	for (const b of buttons) b.addEventListener("click", () => show(b.dataset.tag ?? ""));
 	const tag = new URLSearchParams(location.search).get("tag");
-	if (tag && [...buttons].some((button) => button.dataset.tag === tag)) show(tag);
+	if (tag) show(tag);
 </script>
 
 <style>
@@ -94,85 +75,74 @@ const tags = [...new Set(posts.flatMap((post) => post.tags))].sort();
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		margin-block: 2rem 0.5rem;
+		margin-block: 2.5rem 1rem;
 	}
-
 	.tags {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem;
 	}
-
 	.tags button {
-		font: inherit;
-		font-family: var(--font-ui);
-		font-size: 0.8rem;
 		padding: 0.3rem 0.7rem;
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: var(--radius);
+		border: 1px solid var(--line);
+		border-radius: 4px;
 		background: transparent;
-		color: var(--sl-color-gray-2);
+		color: var(--nav);
+		font: 0.8125rem var(--mono);
 		cursor: pointer;
 	}
-
 	.tags button:hover {
-		color: var(--sl-color-white);
-		border-color: var(--sl-color-gray-3);
+		border-color: var(--line-strong);
+		color: var(--strong);
 	}
-
 	.tags button[aria-pressed="true"] {
-		color: var(--sl-color-black);
-		background: var(--sl-color-white);
-		border-color: var(--sl-color-white);
+		background: var(--strong);
+		border-color: var(--strong);
+		color: var(--bg);
 	}
-
-	.bar :global(.sl-link-button) {
-		margin: 0;
-	}
-
 	.posts {
 		list-style: none;
+		margin: 0;
 		padding: 0;
-		margin-top: 1rem;
 	}
-
 	.posts li {
 		display: grid;
-		grid-template-columns: 8rem 1fr;
+		grid-template-columns: 9rem 1fr;
 		gap: 0.25rem 2rem;
-		padding-block: 1.5rem;
-		border-top: 1px solid var(--sl-color-gray-5);
+		padding-block: 1.75rem;
+		border-top: 1px solid var(--line);
 	}
-
 	.posts li[hidden] {
 		display: none;
 	}
-
 	.posts time {
-		font-family: var(--font-ui);
-		font-size: 0.85rem;
-		color: var(--sl-color-gray-3);
-		padding-top: 0.15rem;
+		padding-top: 0.2rem;
+		font: 0.875rem var(--mono);
+		color: var(--faint);
 	}
-
 	.posts a {
-		font-family: var(--font-ui);
-		font-weight: 500;
-		color: var(--sl-color-white);
+		font-family: var(--mono);
+		font-size: 1.125rem;
 		text-decoration: none;
-		margin-inline-end: 0.5rem;
 	}
-
 	.posts a:hover {
-		color: var(--sl-color-text-accent);
+		text-decoration: underline;
 	}
-
 	.posts p {
-		margin: 0.4rem 0 0;
-		color: var(--sl-color-gray-2);
-		font-size: 0.92rem;
+		margin-top: 0.4rem;
+		font-size: 1rem;
 	}
-
+	.draft {
+		margin-left: 0.6rem;
+		padding: 0.05rem 0.4rem;
+		border: 1px solid var(--warn);
+		border-radius: 4px;
+		color: var(--warn);
+		font: 0.75rem var(--mono);
+	}
+	.empty {
+		margin-top: 2rem;
+	}
 	@media (max-width: 40rem) {
 		.posts li {
 			grid-template-columns: 1fr;
