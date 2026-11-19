@@ -1,0 +1,97 @@
+---
+// Every page of the site except Learn: the menu on the left (src/components/Rail.astro), the page on
+// the right, the chat in the corner (turquoise's script).
+import "@fontsource-variable/inter";
+import "@fontsource-variable/geist-mono";
+import "../styles/site.css";
+
+import Rail from "../components/Rail.astro";
+import { type Lang, words } from "../i18n";
+
+interface Props {
+	lang: Lang;
+	/** The page's title; the site's name is added. Leave out on the home page. */
+	title?: string;
+	description?: string;
+	/** This page in the other language (both ways, e.g. "/about/" and "/tr/about/"). */
+	otherLanguage?: string;
+	/** Wider content (the status page). */
+	wide?: boolean;
+}
+
+const {
+	lang,
+	title,
+	description = words[lang].description,
+	otherLanguage,
+	wide = false,
+} = Astro.props;
+const fullTitle = title ? `${title} · Berk Önder` : "Berk Önder";
+const url = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={url} />
+		{otherLanguage && <link rel="alternate" hreflang={words[lang].otherLanguage.lang} href={new URL(otherLanguage, Astro.site)} />}
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="alternate" type="application/rss+xml" title="Berk Önder: Blog" href="/blog/rss.xml" />
+		<link rel="describedby" type="text/plain" href="/llms.txt" />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={url} />
+		<meta property="og:image" content={new URL("/og.png", Astro.site)} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<script is:inline>
+			// The theme before the first paint: the visitor's choice (shared with Learn), else their system's.
+			(() => {
+				let theme = null;
+				try {
+					theme = localStorage.getItem("starlight-theme");
+				} catch {}
+				if (theme !== "light" && theme !== "dark") {
+					theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+				}
+				document.documentElement.dataset.theme = theme;
+			})();
+		</script>
+		<script type="module" src="/widget/turquoise.js"></script>
+	</head>
+	<body>
+		<div class="page">
+			<Rail lang={lang} otherLanguage={otherLanguage} />
+			<main class:list={{ wide }}>
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>
+
+<style>
+	.page {
+		display: grid;
+		grid-template-columns: var(--rail) 1fr;
+		min-height: 100vh;
+	}
+	main {
+		width: 100%;
+		max-width: calc(var(--content) + 8rem);
+		padding: 4.5rem 4rem 6rem;
+	}
+	main.wide {
+		max-width: calc(var(--content) + 22rem);
+	}
+	@media (max-width: 52rem) {
+		.page {
+			grid-template-columns: 1fr;
+		}
+		main {
+			padding: 2.5rem 1rem 5rem;
+		}
+	}
+</style>

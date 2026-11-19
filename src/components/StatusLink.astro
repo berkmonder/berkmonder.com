@@ -1,0 +1,73 @@
+---
+// The status in the menu: four bars and a word ("Normal"), linking to the status page. The browser
+// reads Upptime's latest checks (github.com/berkmonder/status) and colors it.
+import { type Lang, path, words } from "../i18n";
+
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+const status = words[lang].status;
+---
+
+<a class="status-link" href={path("/status/", lang)} title={status.title} data-words={JSON.stringify(status)}>
+	<span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+	<span class="word">{status.unknown}</span>
+</a>
+
+<script>
+	const link = document.querySelector<HTMLAnchorElement>(".status-link");
+	const summary = "https://raw.githubusercontent.com/berkmonder/status/master/history/summary.json";
+
+	if (link) {
+		const said = JSON.parse(link.dataset.words ?? "{}");
+		fetch(summary)
+			.then((response) => response.json())
+			.then((sites: { status: "up" | "degraded" | "down" }[]) => {
+				const state = sites.some((s) => s.status === "down")
+					? "outage"
+					: sites.some((s) => s.status === "degraded")
+						? "degraded"
+						: "normal";
+				link.dataset.state = state;
+				link.querySelector(".word")!.textContent = said[state];
+			})
+			.catch(() => {});
+	}
+</script>
+
+<style>
+	.status-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.2rem 0.4rem;
+		margin-inline: -0.4rem;
+		border-radius: 4px;
+		color: var(--nav);
+		text-decoration: none;
+	}
+	.status-link:hover {
+		background: var(--bg-raised);
+		color: var(--strong);
+	}
+	.bars {
+		display: flex;
+		gap: 2px;
+	}
+	.bars i {
+		width: 4px;
+		height: 0.9rem;
+		border-radius: 1px;
+		background: var(--line-strong);
+	}
+	.status-link[data-state="normal"] i {
+		background: var(--ok);
+	}
+	.status-link[data-state="degraded"] i {
+		background: var(--warn);
+	}
+	.status-link[data-state="outage"] i {
+		background: var(--bad);
+	}
+</style>

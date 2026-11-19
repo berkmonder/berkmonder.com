@@ -1,0 +1,35 @@
+---
+// The status page, in English (/status/) and Turkish (/tr/status/). The board itself is
+// src/components/Status.tsx (it fills itself in the browser from Upptime's data).
+import StatusBoard from "../components/Status";
+import { type Lang, path } from "../i18n";
+import Site from "../layouts/Site.astro";
+
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+const text = {
+	en: {
+		title: "Status",
+		note: "Checked every 5 minutes from GitHub's servers by Upptime. Full history:",
+	},
+	tr: {
+		title: "Durum",
+		note: "Upptime ile GitHub'ın sunucularından 5 dakikada bir kontrol ediliyor. Tüm geçmiş:",
+	},
+}[lang];
+---
+
+<Site lang={lang} title={text.title} otherLanguage={path("/status/", lang === "en" ? "tr" : "en")} wide>
+	<StatusBoard client:load lang={lang} />
+	<p class="note">{text.note} <a href="https://github.com/berkmonder/status">github.com/berkmonder/status</a></p>
+</Site>
+
+<style>
+	.note {
+		margin-top: 3rem;
+		font-size: 0.9375rem;
+		color: var(--faint);
+	}
+</style>

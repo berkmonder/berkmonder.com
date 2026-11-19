@@ -1,0 +1,201 @@
+---
+// About me, in English (/about/) and Turkish (/tr/about/). The text is here, the layout below it.
+import { type Lang, path } from "../i18n";
+import Site from "../layouts/Site.astro";
+
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+
+const text = {
+	en: {
+		title: "About",
+		intro: [
+			"I'm Muhammed Berk Önder, an AI/ML engineer in Istanbul. I studied physics, came to machine learning through data, and since 2022 I've built ML systems that run in production.",
+			"I care about systems that keep working after the demo: measured, monitored, reproducible, and understood by the people who run them. That's also why I teach.",
+			"Outside work I read about how the universe works, write small games, and bake cookies.",
+		],
+		cv: "Download my CV",
+		experienceLabel: "Experience",
+		experience: [
+			{
+				when: "2024 – now",
+				role: "MLOps Engineer · Teknasyon",
+				text: "LLM systems, data pipelines and MLOps on GCP for a mobile app company: a RAG assistant over internal data, anomaly detection pipelines, spam detection at scale, experiment tracking, CI/CD, and fine-tuning of 30B models.",
+			},
+			{
+				when: "2022 – 2024",
+				role: "Machine Learning Engineer · P.I. Works",
+				text: "ML for telecom networks: an LLM assistant over knowledge bases and SQL data, traffic forecasting, streaming anomaly detection, and synthetic data generation.",
+			},
+		],
+		educationLabel: "Education",
+		education: [
+			{
+				when: "2024",
+				role: "M.Sc., High Energy and Plasma Physics",
+				text: "İstanbul University",
+			},
+			{ when: "2021", role: "B.Sc., Physics", text: "İstanbul University" },
+		],
+		skillsLabel: "Skills",
+		skills: [
+			[
+				"LLMs",
+				"LangChain, LangGraph, Pydantic AI, llama.cpp, vLLM, Ollama, LiteLLM, Hugging Face, Unsloth",
+			],
+			[
+				"Machine learning",
+				"PyTorch, scikit-learn, TensorFlow, PySpark, time series",
+			],
+			[
+				"MLOps & infrastructure",
+				"MLflow, Airflow, Prefect, Docker, Podman, CI/CD, GCP, Linux, Nix",
+			],
+			[
+				"Languages",
+				"Python, SQL, Bash · Turkish (native), English (proficient)",
+			],
+		],
+	},
+	tr: {
+		title: "Hakkımda",
+		intro: [
+			"Ben Muhammed Berk Önder, İstanbul'da yapay zekâ/ML mühendisiyim. Fizik okudum, makine öğrenmesine veri üzerinden geldim ve 2022'den beri üretimde çalışan ML sistemleri kuruyorum.",
+			"Demodan sonra da çalışmaya devam eden sistemleri önemsiyorum: ölçülen, izlenen, tekrar üretilebilen ve onu işleten insanların anladığı sistemler. Ders anlatmamın sebebi de bu.",
+			"İş dışında evrenin nasıl işlediğini okuyor, küçük oyunlar yazıyor ve kurabiye yapıyorum.",
+		],
+		cv: "Özgeçmişimi indir",
+		experienceLabel: "Deneyim",
+		experience: [
+			{
+				when: "2024 – şimdi",
+				role: "MLOps Mühendisi · Teknasyon",
+				text: "Bir mobil uygulama şirketinde GCP üzerinde LLM sistemleri, veri hatları ve MLOps: iç veriler üzerinde RAG asistanı, anomali tespiti hatları, büyük ölçekte spam tespiti, deney takibi, CI/CD ve 30B modellerin ince ayarı.",
+			},
+			{
+				when: "2022 – 2024",
+				role: "Makine Öğrenmesi Mühendisi · P.I. Works",
+				text: "Telekom şebekeleri için ML: bilgi tabanları ve SQL verisi üzerinde bir LLM asistanı, trafik tahmini, akan veride anomali tespiti ve sentetik veri üretimi.",
+			},
+		],
+		educationLabel: "Eğitim",
+		education: [
+			{
+				when: "2024",
+				role: "Yüksek Lisans, Yüksek Enerji ve Plazma Fiziği",
+				text: "İstanbul Üniversitesi",
+			},
+			{ when: "2021", role: "Lisans, Fizik", text: "İstanbul Üniversitesi" },
+		],
+		skillsLabel: "Yetenekler",
+		skills: [
+			[
+				"LLM'ler",
+				"LangChain, LangGraph, Pydantic AI, llama.cpp, vLLM, Ollama, LiteLLM, Hugging Face, Unsloth",
+			],
+			[
+				"Makine öğrenmesi",
+				"PyTorch, scikit-learn, TensorFlow, PySpark, zaman serileri",
+			],
+			[
+				"MLOps ve altyapı",
+				"MLflow, Airflow, Prefect, Docker, Podman, CI/CD, GCP, Linux, Nix",
+			],
+			["Diller", "Python, SQL, Bash · Türkçe (ana dil), İngilizce (ileri)"],
+		],
+	},
+}[lang];
+---
+
+<Site lang={lang} title={text.title} otherLanguage={path("/about/", lang === "en" ? "tr" : "en")}>
+	<h1>{text.title}</h1>
+	<div class="intro">
+		{text.intro.map((p) => <p>{p}</p>)}
+	</div>
+	<div class="actions">
+		<a class="button primary" href="/files/resume_muhammedBerkOnder.pdf">{text.cv}</a>
+		<a class="button" href="https://www.linkedin.com/in/berkmonder">LinkedIn</a>
+		<a class="button" href="https://github.com/berkmonder">GitHub</a>
+	</div>
+
+	<section class="section">
+		<h2>{text.experienceLabel}</h2>
+		<div class="body">
+			{
+				text.experience.map((e) => (
+					<div class="entry">
+						<p class="when mono">{e.when}</p>
+						<h3>{e.role}</h3>
+						<p>{e.text}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<h2>{text.educationLabel}</h2>
+		<div class="body">
+			{
+				text.education.map((e) => (
+					<div class="entry">
+						<p class="when mono">{e.when}</p>
+						<h3>{e.role}</h3>
+						<p>{e.text}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="section">
+		<h2>{text.skillsLabel}</h2>
+		<dl class="body skills">
+			{
+				text.skills.map(([area, list]) => (
+					<div>
+						<dt>{area}</dt>
+						<dd>{list}</dd>
+					</div>
+				))
+			}
+		</dl>
+	</section>
+</Site>
+
+<style>
+	.intro {
+		margin-top: 1.5rem;
+		max-width: 40rem;
+	}
+	.intro p + p {
+		margin-top: 1rem;
+	}
+	.intro p:first-child {
+		font-size: 1.25rem;
+		line-height: 1.5;
+	}
+	.entry + .entry {
+		margin-top: 2rem;
+	}
+	.entry h3 {
+		margin-block: 0.25rem 0.5rem;
+	}
+	.when {
+		font-size: 0.875rem;
+		color: var(--faint);
+	}
+	.skills {
+		margin: 0;
+	}
+	.skills dt {
+		color: var(--strong);
+		font-family: var(--mono);
+		font-size: 1rem;
+	}
+	.skills dd {
+		margin: 0.2rem 0 0;
+	}
+</style>

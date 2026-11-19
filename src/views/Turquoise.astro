@@ -1,0 +1,132 @@
+---
+// Turquoise, my assistant, in English (/turquoise/) and Turkish (/tr/turquoise/): what it is, how it
+// works, and the chat itself (turquoise's script fills the <div data-turquoise-inline>).
+import { type Lang, path } from "../i18n";
+import Site from "../layouts/Site.astro";
+
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+
+const text = {
+	en: {
+		title: "Turquoise",
+		lead: "My assistant: an agent that answers questions about my work. It runs on my own GPU, searches my CV and this website, and shows its thinking and every tool call as it answers. Try it below.",
+		howLabel: "How it works",
+		how: [
+			{
+				title: "The model",
+				text: "Qwen3.5 9B on my PC's RTX 3060, behind LiteLLM, which traces every call in MLflow.",
+			},
+			{
+				title: "The agent",
+				text: "Built with Pydantic AI. It searches before it answers, and answers only from what it found.",
+			},
+			{
+				title: "RAG",
+				text: "My CV and this website's pages, searched by words and by meaning. Answers link the pages they used.",
+			},
+			{
+				title: "When the GPU is off",
+				text: "The same agent gives a quick answer from search alone, and says so.",
+			},
+		],
+		toolsLabel: "Its tools",
+		tools: [
+			["search_profile", "my CV: experience, skills, education"],
+			["search_site", "this website, read from its sitemap every hour"],
+			["get_status", "whether my GPU is on and my sites are up"],
+		],
+		code: "The code",
+	},
+	tr: {
+		title: "Turquoise",
+		lead: "Asistanım: işim hakkındaki soruları cevaplayan bir ajan. Kendi GPU'mda çalışıyor, özgeçmişimde ve bu sitede arama yapıyor, cevap verirken düşüncelerini ve her araç çağrısını gösteriyor. Aşağıda deneyebilirsiniz.",
+		howLabel: "Nasıl çalışıyor",
+		how: [
+			{
+				title: "Model",
+				text: "Bilgisayarımdaki RTX 3060'ta Qwen3.5 9B; önünde her çağrıyı MLflow'a kaydeden LiteLLM.",
+			},
+			{
+				title: "Ajan",
+				text: "Pydantic AI ile yazıldı. Cevaplamadan önce arar ve yalnızca bulduğuna dayanarak cevap verir.",
+			},
+			{
+				title: "RAG",
+				text: "Özgeçmişim ve bu sitenin sayfaları; kelimeyle ve anlamla aranıyor. Cevaplar kullandığı sayfalara bağlantı veriyor.",
+			},
+			{
+				title: "GPU kapalıyken",
+				text: "Aynı ajan yalnızca aramayla hızlı bir cevap verir ve bunu söyler.",
+			},
+		],
+		toolsLabel: "Araçları",
+		tools: [
+			["search_profile", "özgeçmişim: deneyim, yetenekler, eğitim"],
+			["search_site", "bu site; site haritasından saatte bir okunuyor"],
+			["get_status", "GPU'mun açık olup olmadığı ve sitelerimin durumu"],
+		],
+		code: "Kodu",
+	},
+}[lang];
+---
+
+<Site lang={lang} title={text.title} otherLanguage={path("/turquoise/", lang === "en" ? "tr" : "en")}>
+	<h1>{text.title}</h1>
+	<p class="lead">{text.lead}</p>
+
+	<div class="chat" data-turquoise-inline></div>
+
+	<section class="section">
+		<h2>{text.howLabel}</h2>
+		<div class="body">
+			<div class="items">
+				{
+					text.how.map((item) => (
+						<div>
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<h2>{text.toolsLabel}</h2>
+		<div class="body">
+			<dl class="tools">
+				{
+					text.tools.map(([name, what]) => (
+						<div>
+							<dt><code>{name}</code></dt>
+							<dd>{what}</dd>
+						</div>
+					))
+				}
+			</dl>
+			<p><a href="https://github.com/berkmonder/turquoise">{text.code}: github.com/berkmonder/turquoise →</a></p>
+		</div>
+	</section>
+</Site>
+
+<style>
+	.chat {
+		margin-block: 2.5rem 1rem;
+	}
+	.tools {
+		margin: 0;
+	}
+	.tools div + div {
+		margin-top: 0.75rem;
+	}
+	.tools dt code {
+		color: var(--strong);
+	}
+	.tools dd {
+		margin: 0.15rem 0 0;
+	}
+</style>

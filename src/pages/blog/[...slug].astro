@@ -1,0 +1,119 @@
+---
+// One blog post (src/content/blog/<slug>.md → /blog/<slug>/), with its contents on the right.
+import { getCollection, render } from "astro:content";
+import Site from "../../layouts/Site.astro";
+
+export async function getStaticPaths() {
+	const posts = await getCollection(
+		"blog",
+		(p) => import.meta.env.DEV || !p.data.draft,
+	);
+	return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const contents = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const date = post.data.date.toLocaleDateString("tr-TR", {
+	day: "numeric",
+	month: "long",
+	year: "numeric",
+	timeZone: "UTC",
+});
+---
+
+<Site lang="tr" title={post.data.title} description={post.data.description} wide>
+	<div class="post">
+		<article>
+			<a class="back" href="/blog/">← Blog</a>
+			<h1>{post.data.title}</h1>
+			<p class="meta">
+				<time datetime={post.data.date.toISOString().slice(0, 10)}>{date}</time>
+				{post.data.tags.map((tag) => <a href={`/blog/?tag=${tag}`}>#{tag}</a>)}
+			</p>
+			<div class="prose">
+				<Content />
+			</div>
+		</article>
+		{
+			contents.length > 0 && (
+				<nav class="contents" aria-label="İçindekiler">
+					<p>İçindekiler</p>
+					<ul>
+						{contents.map((h) => (
+							<li class={`depth-${h.depth}`}>
+								<a href={`#${h.slug}`}>{h.text}</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			)
+		}
+	</div>
+</Site>
+
+<style>
+	.post {
+		display: grid;
+		grid-template-columns: minmax(0, var(--content)) 14rem;
+		gap: 4rem;
+	}
+	.back {
+		display: inline-block;
+		margin-bottom: 2rem;
+		font: 0.875rem var(--mono);
+		color: var(--nav);
+		text-decoration: none;
+	}
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-block: 1rem 2.5rem;
+		font: 0.875rem var(--mono);
+		color: var(--faint);
+	}
+	.meta a {
+		color: var(--nav);
+		text-decoration: none;
+	}
+	.contents {
+		position: sticky;
+		top: 2rem;
+		align-self: start;
+		font: 0.875rem var(--mono);
+	}
+	.contents p {
+		margin-bottom: 0.75rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--faint);
+	}
+	.contents ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.contents li {
+		padding-block: 0.25rem;
+	}
+	.contents .depth-3 {
+		padding-left: 1rem;
+	}
+	.contents a {
+		color: var(--nav);
+		text-decoration: none;
+	}
+	.contents a:hover {
+		color: var(--strong);
+	}
+	@media (max-width: 72rem) {
+		.post {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.contents {
+			display: none;
+		}
+	}
+</style>
