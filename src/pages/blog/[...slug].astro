@@ -22,7 +22,7 @@ const date = post.data.date.toLocaleDateString("tr-TR", {
 });
 ---
 
-<Site lang="tr" title={post.data.title} description={post.data.description} wide>
+<Site lang="tr" title={post.data.title} description={post.data.description}>
 	<div class="post">
 		<article>
 			<a class="back" href="/blog/">← Blog</a>
@@ -55,8 +55,8 @@ const date = post.data.date.toLocaleDateString("tr-TR", {
 <style>
 	.post {
 		display: grid;
-		grid-template-columns: minmax(0, var(--content)) 14rem;
-		gap: 4rem;
+		grid-template-columns: minmax(0, 1fr) 13rem;
+		gap: 3rem;
 	}
 	.back {
 		display: inline-block;

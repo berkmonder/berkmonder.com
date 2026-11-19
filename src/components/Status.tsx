@@ -1,4 +1,4 @@
-// The status board (/status, /tr/status). The checks are Upptime's (github.com/berkmonder/status):
+// The status board (/status, /en/status). The checks are Upptime's (github.com/berkmonder/status):
 // GitHub runs them every 5 minutes, from outside my servers, and keeps their history there. This reads
 // it live: one bar per day for 30 days (hover for the day, click a red one for its incident), whether
 // my GPU is on (/api/status), and past incidents (Upptime opens a GitHub issue for each).

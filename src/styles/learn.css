@@ -1,11 +1,13 @@
-/* Learn's look (Starlight): the site's colors and fonts (see site.css) in Starlight's names, and a few
-   touches: categories in small capitals, [ ] before each page in the menu and [-] before the open one.
-   Starlight's own styles are in CSS layers, so these win. */
+/* Learn's look (Starlight), after opencode's docs: the site's colors and fonts (see site.css) in
+   Starlight's names, no lines between the columns, monospace for the menu and the contents, categories in
+   small capitals, [ ] before each page and [-] before the open one, a bar beside the section you're
+   reading. Starlight's own styles are in CSS layers, so these win. */
 
 :root {
 	--sl-font: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 	--sl-font-mono: "Geist Mono Variable", ui-monospace, monospace;
-	--sl-content-width: 46rem;
+	--sl-content-width: 44rem;
+	--sl-sidebar-width: 19rem;
 
 	--sl-color-accent-low: #0f2e2c;
 	--sl-color-accent: #2bb8a9;
@@ -20,7 +22,6 @@
 	--sl-color-black: #0c0c0c;
 	--sl-color-bg-nav: var(--sl-color-black);
 	--sl-color-bg-sidebar: var(--sl-color-black);
-	--sl-color-hairline-shade: var(--sl-color-gray-5);
 }
 
 :root[data-theme="light"] {
@@ -30,7 +31,7 @@
 	--sl-color-white: #111111;
 	--sl-color-gray-1: #222222;
 	--sl-color-gray-2: #555555;
-	--sl-color-gray-3: #5c5c5c;
+	--sl-color-gray-3: #6b6b6b;
 	--sl-color-gray-4: #9a9a9a;
 	--sl-color-gray-5: #e6e6e6;
 	--sl-color-gray-6: #f3f3f3;
@@ -38,63 +39,96 @@
 	--sl-color-black: #fdfdfd;
 }
 
-/* Headings, the menu and small labels in monospace */
+/* No lines between the top row and the columns */
+.header {
+	border-bottom-color: transparent;
+}
+
+.sidebar-pane,
+.right-sidebar {
+	border-color: transparent;
+}
+
+/* Headings and the page's text */
 h1,
 h2,
 h3,
-h4,
-.site-title,
-.sidebar-content,
-.right-sidebar-panel,
-.starlight-sidebar-topics-dropdown-button {
+h4 {
 	font-family: var(--sl-font-mono);
 }
 
-.sl-markdown-content :is(h1, h2, h3, h4),
 h1#_top {
+	font-size: 2rem;
 	font-weight: 400;
 	letter-spacing: -0.02em;
 }
 
+.sl-markdown-content :is(h2, h3, h4) {
+	font-weight: 400;
+	letter-spacing: -0.01em;
+}
+
 .sl-markdown-content h2 {
-	font-size: 1.5rem;
+	font-size: 1.4rem;
 }
 
 .sl-markdown-content h3 {
-	font-size: 1.2rem;
+	font-size: 1.15rem;
 }
 
-.site-title {
-	font-weight: 400;
-	color: var(--sl-color-white);
-}
-
-.site-title img {
-	height: 1.6rem;
-}
-
-/* Links read as text, underlined */
 .sl-markdown-content a:not(:where(.not-content *)) {
 	color: var(--sl-color-white);
 	text-decoration-color: var(--sl-color-gray-4);
 	text-underline-offset: 0.2em;
 }
 
+/* The subject dropdown, like opencode's "DOCS ⌄": plain capitals, no box */
+.starlight-sidebar-topics-dropdown-button {
+	background: transparent;
+	padding-inline: 0.25rem;
+	font-family: var(--sl-font-mono);
+	font-size: 0.9375rem;
+	text-transform: uppercase;
+}
+
+.starlight-sidebar-topics-dropdown-button::before {
+	display: none;
+}
+
+.starlight-sidebar-topics-dropdown-button-label {
+	font-weight: 400;
+}
+
+.starlight-sidebar-topics-dropdown-menu {
+	font-family: var(--sl-font-mono);
+	font-size: 0.875rem;
+	text-transform: uppercase;
+}
+
+/* Search: a quiet box */
+site-search button[data-open-modal] {
+	border-radius: 4px;
+	border-color: transparent;
+	background: var(--sl-color-gray-6);
+	font-family: var(--sl-font-mono);
+}
+
 /* The menu: categories in small capitals; [ ] before each page, [-] before the open one */
 .sidebar-content {
+	font-family: var(--sl-font-mono);
 	font-size: 0.9375rem;
 }
 
 .sidebar-content .group-label .large {
 	font-size: 0.75rem;
-	font-weight: 500;
-	letter-spacing: 0.06em;
+	font-weight: 400;
+	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	color: var(--sl-color-gray-4);
+	color: var(--sl-color-gray-3);
 }
 
 .sidebar-content .top-level a {
-	color: var(--sl-color-gray-2);
+	color: var(--sl-color-gray-3);
 	padding-block: 0.25rem;
 }
 
@@ -105,7 +139,6 @@ h1#_top {
 .sidebar-content .top-level a::before {
 	content: "[ ]";
 	margin-inline-end: 0.7em;
-	color: var(--sl-color-gray-4);
 }
 
 .sidebar-content .top-level a[aria-current="page"],
@@ -117,20 +150,31 @@ h1#_top {
 
 .sidebar-content .top-level a[aria-current="page"]::before {
 	content: "[-]";
-	color: var(--sl-color-white);
 }
 
-/* The subject dropdown at the top of the menu */
-.starlight-sidebar-topics-dropdown-button {
-	border-radius: 4px;
+/* The contents on the right: a bar beside the section you're reading */
+.right-sidebar-panel {
+	font-family: var(--sl-font-mono);
 }
 
-/* Contents on the right */
 .right-sidebar-panel h2 {
 	font-size: 0.75rem;
-	letter-spacing: 0.06em;
+	font-weight: 400;
+	letter-spacing: 0.04em;
 	text-transform: uppercase;
-	color: var(--sl-color-gray-4);
+	color: var(--sl-color-gray-3);
+}
+
+.right-sidebar-panel a {
+	padding-inline-start: 0.75rem;
+	border-inline-start: 1px solid transparent;
+	font-size: 0.875rem;
+	color: var(--sl-color-gray-3);
+}
+
+.right-sidebar-panel a[aria-current="true"] {
+	border-inline-start-color: var(--sl-color-white);
+	color: var(--sl-color-white);
 }
 
 /* Buttons and cards: square and plain */

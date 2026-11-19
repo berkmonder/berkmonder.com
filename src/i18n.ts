@@ -1,19 +1,19 @@
-// The site's two languages: English (/) and Turkish (/tr/). Learn and the blog are in Turkish only.
+// The site's two languages: Turkish (/) and English (/en/). Learn and the blog are in Turkish only.
 // Words used on every page are here; each page keeps its own text at its top (src/views/).
 
 export type Lang = "en" | "tr";
 
-/** The same page in a language: path("/about/", "tr") → "/tr/about/". */
+/** The same page in a language: path("/about/", "en") → "/en/about/". */
 export const path = (page: string, lang: Lang) =>
-	lang === "tr" ? `/tr${page}` : page;
+	lang === "en" ? `/en${page}` : page;
 
 export const words = {
 	en: {
 		menu: [
 			{ label: "Learn", href: "/learn/" },
 			{ label: "Blog", href: "/blog/" },
-			{ label: "Turquoise", href: "/turquoise/" },
-			{ label: "About", href: "/about/" },
+			{ label: "Turquoise", href: "/en/turquoise/" },
+			{ label: "About", href: "/en/about/" },
 		],
 		home: "Home",
 		otherLanguage: { label: "Türkçe", lang: "tr" as Lang },
@@ -33,8 +33,8 @@ export const words = {
 		menu: [
 			{ label: "Öğren", href: "/learn/" },
 			{ label: "Blog", href: "/blog/" },
-			{ label: "Turquoise", href: "/tr/turquoise/" },
-			{ label: "Hakkımda", href: "/tr/about/" },
+			{ label: "Turquoise", href: "/turquoise/" },
+			{ label: "Hakkımda", href: "/about/" },
 		],
 		home: "Ana sayfa",
 		otherLanguage: { label: "English", lang: "en" as Lang },

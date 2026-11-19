@@ -23,7 +23,7 @@ export default defineConfig({
 		starlight({
 			title: "Berk Önder",
 			description: "Türkçe dersler: LLM'ler ve ajanlar, MLOps, altyapı.",
-			locales: { root: { label: "Türkçe", lang: "tr-TR" } }, // "tr-TR", not "tr": /tr/ is the site's Turkish pages
+			locales: { root: { label: "Türkçe", lang: "tr" } },
 			logo: { src: "./src/assets/mark.svg" },
 			favicon: "/favicon.svg",
 			social: [
@@ -85,6 +85,7 @@ export default defineConfig({
 				}),
 			],
 			components: {
+				Header: "./src/components/learn/Header.astro",
 				Sidebar: "./src/components/learn/Sidebar.astro",
 				ThemeSelect: "./src/components/learn/ThemeSelect.astro",
 			},

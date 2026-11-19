@@ -1,5 +1,5 @@
 ---
-// The home page, in English (/) and Turkish (/tr/). The text is here, the layout below it.
+// The home page, in Turkish (/) and English (/en/). The text is here, the layout below it.
 import { getCollection } from "astro:content";
 import { type Lang, path } from "../i18n";
 import Site from "../layouts/Site.astro";
@@ -81,9 +81,27 @@ const posts = (
 )
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 	.slice(0, 3);
+
+// The chat on this page: its suggested questions (and button label).
+const assistant = {
+	en: {
+		suggestions: [
+			"What's on this site?",
+			"What does Berk do?",
+			"Which lessons are there?",
+		],
+	},
+	tr: {
+		suggestions: [
+			"Bu sitede neler var?",
+			"Berk ne iş yapıyor?",
+			"Hangi dersler var?",
+		],
+	},
+}[lang];
 ---
 
-<Site lang={lang} otherLanguage={path("/", lang === "en" ? "tr" : "en")}>
+<Site lang={lang} assistant={assistant} otherLanguage={path("/", lang === "en" ? "tr" : "en")}>
 	<section class="hero">
 		<h1>{text.title}</h1>
 		<p class="lead">{text.lead}</p>

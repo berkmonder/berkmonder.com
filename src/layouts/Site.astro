@@ -13,10 +13,10 @@ interface Props {
 	/** The page's title; the site's name is added. Leave out on the home page. */
 	title?: string;
 	description?: string;
-	/** This page in the other language (both ways, e.g. "/about/" and "/tr/about/"). */
+	/** This page in the other language (both ways, e.g. "/about/" and "/en/about/"). */
 	otherLanguage?: string;
-	/** Wider content (the status page). */
-	wide?: boolean;
+	/** The chat's button label and suggested questions on this page (otherwise turquoise's own). */
+	assistant?: { label?: string; suggestions?: string[] };
 }
 
 const {
@@ -24,7 +24,7 @@ const {
 	title,
 	description = words[lang].description,
 	otherLanguage,
-	wide = false,
+	assistant,
 } = Astro.props;
 const fullTitle = title ? `${title} · Berk Önder` : "Berk Önder";
 const url = new URL(Astro.url.pathname, Astro.site);
@@ -60,37 +60,34 @@ const url = new URL(Astro.url.pathname, Astro.site);
 				document.documentElement.dataset.theme = theme;
 			})();
 		</script>
+		{assistant?.label && <meta name="turquoise:label" content={assistant.label} />}
+		{assistant?.suggestions && <meta name="turquoise:suggestions" content={assistant.suggestions.join("|")} />}
 		<script type="module" src="/widget/turquoise.js"></script>
 	</head>
 	<body>
-		<div class="page">
-			<Rail lang={lang} otherLanguage={otherLanguage} />
-			<main class:list={{ wide }}>
-				<slot />
-			</main>
-		</div>
+		<Rail lang={lang} otherLanguage={otherLanguage} />
+		<main>
+			<slot />
+		</main>
 	</body>
 </html>
 
 <style>
-	.page {
-		display: grid;
-		grid-template-columns: var(--rail) 1fr;
-		min-height: 100vh;
-	}
+	/* The page's column is centered in the window (the menu stays at the left edge); on narrower
+	   windows it moves right so it never runs under the menu. */
 	main {
-		width: 100%;
-		max-width: calc(var(--content) + 8rem);
-		padding: 4.5rem 4rem 6rem;
+		max-width: var(--page);
+		margin-inline: auto;
+		padding: 4.5rem 2rem 6rem;
 	}
-	main.wide {
-		max-width: calc(var(--content) + 22rem);
+	@media (max-width: 88rem) {
+		main {
+			margin-left: var(--rail);
+		}
 	}
 	@media (max-width: 52rem) {
-		.page {
-			grid-template-columns: 1fr;
-		}
 		main {
+			margin-left: 0;
 			padding: 2.5rem 1rem 5rem;
 		}
 	}
