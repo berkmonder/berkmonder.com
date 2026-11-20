@@ -23,7 +23,7 @@ Two parts:
 | Add a subject to Learn | a folder in `src/content/docs/learn/`, and an entry in `starlightSidebarTopics` in `astro.config.ts` |
 | Put a video on a page | `import { YouTube } from "@astro-community/astro-embed-youtube";` then `<YouTube id="…" />` |
 | Change colors or fonts | `src/styles/site.css` (the site) and `src/styles/learn.css` (Learn): the same colors, dark first, then light |
-| Replace the CV | `public/files/resume_muhammedBerkOnder.pdf` |
+| Change the CV | `cv/cv.md`; push, and the PDF is rebuilt (see [The CV](#the-cv)) |
 | Remake the link-preview image | `node scripts/og.mjs public/og.png` |
 
 ## How it's put together
@@ -40,7 +40,8 @@ src/components/            Rail (the menu: press 1–4 to go to a page), StatusL
 src/content/blog/          blog posts
 src/content/docs/learn/    Learn's pages: <subject>/<category>/<page>.mdx
 src/i18n.ts                the two languages: the menu and the words every page uses
-public/                    files served as they are (CV, images, favicon)
+cv/                        the CV: cv.md (the text), cv.css (its look), build.py (Markdown → PDF)
+public/                    files served as they are (images, favicon)
 ```
 
 - **The chat** is [turquoise](https://github.com/berkmonder/turquoise), a separate app. Every page loads
@@ -55,6 +56,30 @@ public/                    files served as they are (CV, images, favicon)
   their history and incidents from there, and whether my GPU is on from `/api/status`.
 - **`/llms.txt`** (and `llms-full.txt`): the site in plain text for language models, made by the
   starlight-llms-txt plugin from Learn's pages and the links in `astro.config.ts`.
+
+## The CV
+
+`cv/cv.md` is the CV, in plain Markdown: one `#` for the name, `##` for the sections, `###` for each job,
+project or degree. The image builds it into `/files/resume_muhammedBerkOnder.pdf` with `cv/build.py`
+(Markdown → HTML → PDF with WeasyPrint, styled by `cv/cv.css`) and serves the Markdown itself at
+`/files/cv.md`, which is what Turquoise reads (every hour). So editing `cv/cv.md` and pushing updates
+both.
+
+It's written for applicant-tracking systems as much as for people: one column, standard section names, no
+icons, tables or images, real text in the PDF. Keep it that way, and keep the headings as they are.
+
+To see the PDF before pushing (Podman, or Docker with the same commands):
+
+```bash
+podman build --target cv -t berkmonder-cv .
+podman create --name cv-preview berkmonder-cv x
+mkdir -p cv/out
+podman cp cv-preview:/resume_muhammedBerkOnder.pdf cv/out/
+podman rm cv-preview
+```
+
+or, with Pango installed on your machine (`brew install pango`): `uv run --script cv/build.py`. Either
+way the PDF is `cv/out/resume_muhammedBerkOnder.pdf` (not committed).
 
 ## RSS
 

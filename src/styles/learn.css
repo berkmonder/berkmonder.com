@@ -57,6 +57,8 @@
 			2
 		);
 		--sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--edge));
+		/* The top row's space on the right: it reaches 4rem past the contents when there's room */
+		--header-end: max(var(--sl-sidebar-pad-x), var(--edge) - 4rem);
 	}
 
 	[data-has-toc] .sidebar-pane {
@@ -68,8 +70,10 @@
 		padding-inline-end: var(--edge);
 	}
 
+	/* The logo where the site's menu has it (site.css); the search box above the contents (Header.astro) */
 	[data-has-toc] .header {
-		padding-inline: calc(var(--edge) + var(--sl-nav-pad-x));
+		padding-inline: calc(var(--edge) + var(--sl-sidebar-pad-x))
+			var(--header-end);
 	}
 }
 

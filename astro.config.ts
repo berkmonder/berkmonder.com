@@ -1,6 +1,7 @@
 import react from "@astrojs/react";
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
+import rehypeExternalLinks from "rehype-external-links";
 import starlightLlmsTxt from "starlight-llms-txt";
 import starlightSidebarTopics from "starlight-sidebar-topics";
 
@@ -26,18 +27,6 @@ export default defineConfig({
 			locales: { root: { label: "Türkçe", lang: "tr" } },
 			logo: { src: "./src/assets/mark.svg" },
 			favicon: "/favicon.svg",
-			social: [
-				{
-					icon: "github",
-					label: "GitHub",
-					href: "https://github.com/berkmonder",
-				},
-				{
-					icon: "linkedin",
-					label: "LinkedIn",
-					href: "https://www.linkedin.com/in/berkmonder",
-				},
-			],
 			plugins: [
 				// The subjects: the dropdown at the top of Learn's menu (src/components/learn/Sidebar.astro).
 				starlightSidebarTopics(
@@ -87,6 +76,7 @@ export default defineConfig({
 			components: {
 				Header: "./src/components/learn/Header.astro",
 				Sidebar: "./src/components/learn/Sidebar.astro",
+				SocialIcons: "./src/components/learn/SocialIcons.astro",
 				ThemeSelect: "./src/components/learn/ThemeSelect.astro",
 			},
 			customCss: [
@@ -108,6 +98,12 @@ export default defineConfig({
 		}),
 		react(),
 	],
+	// Links to other sites in Markdown (blog posts, lessons) open in a new tab, so the site stays open.
+	markdown: {
+		rehypePlugins: [
+			[rehypeExternalLinks, { target: "_blank", rel: ["noopener"] }],
+		],
+	},
 	redirects: {
 		"/services": "/",
 		"/work": "/about/",

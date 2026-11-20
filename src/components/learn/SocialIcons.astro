@@ -1,0 +1,34 @@
+---
+// GitHub and LinkedIn in Learn's phone menu (on wider screens the top row has GitHub: Header.astro).
+// They open in a new tab, like every outside link on the site.
+import { Icon } from "@astrojs/starlight/components";
+
+const links = [
+	{ label: "GitHub", href: "https://github.com/berkmonder", icon: "github" },
+	{
+		label: "LinkedIn",
+		href: "https://www.linkedin.com/in/berkmonder",
+		icon: "linkedin",
+	},
+] as const;
+---
+
+{
+	links.map(({ label, href, icon }) => (
+		<a href={href} rel="me noopener" target="_blank" class="sl-flex">
+			<span class="sr-only">{label}</span>
+			<Icon name={icon} />
+		</a>
+	))
+}
+
+<style>
+	a {
+		color: var(--sl-color-text-accent);
+		padding: 0.5em;
+		margin: -0.5em;
+	}
+	a:hover {
+		color: var(--sl-color-white);
+	}
+</style>
