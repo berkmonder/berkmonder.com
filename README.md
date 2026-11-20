@@ -31,18 +31,35 @@ Two parts:
 ```
 astro.config.ts            Learn (Starlight): its subjects, llms.txt; redirects; the dev proxy
 src/pages/                 the site's addresses: index, about, turquoise, status (and en/ for English),
-                           blog/ (list, posts, rss.xml), 404
+                           blog/ (list, posts, rss.xml), 404, apps/yap/ (see "Loose ends")
 src/views/                 those pages' text and layout (Home, About, Turquoise, Status)
 src/layouts/Site.astro     around every page of the site: <head>, the menu, the chat's script
 src/components/            Rail (the menu: press 1–4 to go to a page), StatusLink (the status in the menu),
                            ThemeButton (dark/light), Status.tsx (the status board), learn/ (Learn's top
-                           row, menu and theme button)
+                           row, menu, social links and theme button: Starlight's own, replaced)
 src/content/blog/          blog posts
 src/content/docs/learn/    Learn's pages: <subject>/<category>/<page>.mdx
+src/content.config.ts      what a blog post's and a lesson's front matter may hold
 src/i18n.ts                the two languages: the menu and the words every page uses
+src/content/i18n/tr.json   Starlight's own words (search, contents…) in Turkish
 cv/                        the CV: cv.md (the text), cv.css (its look), build.py (Markdown → PDF)
-public/                    files served as they are (images, favicon)
+public/                    files served as they are (images, favicon, og.png)
+scripts/og.mjs             makes the link-preview image, public/og.png
+Containerfile, Caddyfile   the image: build with Node, build the CV, serve everything with Caddy
+.github/workflows/         deploy.yml: on main, build the image, check it answers, publish it
 ```
+
+## Addresses
+
+| Address | What |
+|---|---|
+| `/`, `/en/` | home, in Turkish and English; also `about`, `turquoise`, `status` under each |
+| `/blog/`, `/blog/rss.xml` | the blog (Turkish) and its feed |
+| `/learn/` | Learn |
+| `/files/resume_muhammedBerkOnder.pdf`, `/files/cv.md` | the CV as a PDF, and the Markdown Turquoise reads |
+| `/llms.txt`, `/llms-full.txt` | the site for language models |
+| `/api/*`, `/widget/*` | turquoise (its API, its chat's script): sent there by the VPS's Caddy, not part of this image |
+| `/services`, `/work`, `/projects`, `/projects/turquoise` | old addresses, redirected (`redirects` in `astro.config.ts`) |
 
 - **The chat** is [turquoise](https://github.com/berkmonder/turquoise), a separate app. Every page loads
   its script, `/widget/turquoise.js`, which puts the chat button in the bottom-right corner (or the chat
@@ -103,4 +120,12 @@ pnpm build   # type-check, then build into dist/
 
 Push to `main`: CI builds the image (`Containerfile`: build with Node, serve with Caddy), checks it answers,
 and publishes it to `ghcr.io/berkmonder/berkmonder`. The VPS runs each new version within about 4
-minutes (nix-dotfiles: `hosts/vps/apps.nix`, `apps.berkmonder`).
+minutes, or goes back to the previous one if it isn't healthy (nix-dotfiles: `hosts/vps/apps.nix`,
+`apps.berkmonder`). Logs: `ssh vps journalctl -u berkmonder -f` (the site), `ssh vps journalctl -u caddy`
+(the front door: HTTPS, `/api`, `/widget`).
+
+## Loose ends
+
+- `src/pages/apps/yap/` (the YAP planner app's privacy policy, terms and support pages) is live at
+  `/apps/yap/`, but each page's content is inside an HTML comment, and the layouts it names don't
+  exist: the pages are blank. Bring them back if the app's store listing needs them, or delete the folder.
