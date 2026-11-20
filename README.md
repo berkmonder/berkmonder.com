@@ -31,7 +31,7 @@ Two parts:
 ```
 astro.config.ts            Learn (Starlight): its subjects, llms.txt; redirects; the dev proxy
 src/pages/                 the site's addresses: index, about, turquoise, status (and en/ for English),
-                           blog/ (list, posts, rss.xml), 404, apps/yap/ (see "Loose ends")
+                           blog/ (list, posts, rss.xml), 404
 src/views/                 those pages' text and layout (Home, About, Turquoise, Status)
 src/layouts/Site.astro     around every page of the site: <head>, the menu, the chat's script
 src/components/            Rail (the menu: press 1–4 to go to a page), StatusLink (the status in the menu),
@@ -123,9 +123,3 @@ and publishes it to `ghcr.io/berkmonder/berkmonder`. The VPS runs each new versi
 minutes, or goes back to the previous one if it isn't healthy (nix-dotfiles: `hosts/vps/apps.nix`,
 `apps.berkmonder`). Logs: `ssh vps journalctl -u berkmonder -f` (the site), `ssh vps journalctl -u caddy`
 (the front door: HTTPS, `/api`, `/widget`).
-
-## Loose ends
-
-- `src/pages/apps/yap/` (the YAP planner app's privacy policy, terms and support pages) is live at
-  `/apps/yap/`, but each page's content is inside an HTML comment, and the layouts it names don't
-  exist: the pages are blank. Bring them back if the app's store listing needs them, or delete the folder.
