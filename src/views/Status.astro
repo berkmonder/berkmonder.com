@@ -41,7 +41,7 @@ const assistant = {
 
 <Site lang={lang} assistant={assistant} title={text.title} otherLanguage={path("/status/", lang === "en" ? "tr" : "en")}>
 	<StatusBoard client:load lang={lang} />
-	<p class="note">{text.note} <a href="https://github.com/berkmonder/status">github.com/berkmonder/status</a></p>
+	<p class="note">{text.note} <a href="https://github.com/berkmonder/status" target="_blank" rel="noopener">github.com/berkmonder/status</a></p>
 </Site>
 
 <style>

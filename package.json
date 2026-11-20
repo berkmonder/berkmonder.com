@@ -24,6 +24,7 @@
 		"astro": "7.4.12",
 		"react": "^19.3.1",
 		"react-dom": "^19.3.1",
+		"rehype-external-links": "3.0.0",
 		"sharp": "0.35.5",
 		"starlight-llms-txt": "0.12.0",
 		"starlight-sidebar-topics": "0.9.0",

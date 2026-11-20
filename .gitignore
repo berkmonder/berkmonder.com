@@ -26,3 +26,6 @@ pnpm-debug.log*
 # local stuff
 .vscode/
 
+
+# the CV built locally (README: The CV)
+cv/out/

@@ -278,7 +278,9 @@ export default function Status({ lang = "en" }: { lang?: "en" | "tr" }) {
 						<li key={i.id} id={`incident-${i.id}`}>
 							<time dateTime={i.opened}>{date(i.opened)}</time>
 							<div>
-								<a href={i.url}>{i.title}</a>
+								<a href={i.url} target="_blank" rel="noopener">
+									{i.title}
+								</a>
 								<small>
 									{i.closed
 										? w.resolved(
