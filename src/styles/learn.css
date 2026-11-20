@@ -39,23 +39,16 @@
 	--sl-color-black: #fdfdfd;
 }
 
-/* Wide screens, pages with contents: the menu, the page and the contents as one frame centered in the
-   window, like opencode's docs (Starlight keeps the menu at the window's edge). --edge is the empty space
-   on each side of the frame. */
+/* Wide screens: Learn sits in the same frame as the rest of the site (site.css: --frame), centered in the
+   window like opencode's docs: the menu (17rem), the page (48rem and its 1.5rem padding on each side) and
+   the contents (17rem): 85rem. --edge is the empty space on each side of the frame. (Starlight keeps the
+   menu at the window's edge.) */
 @media (min-width: 72rem) {
+	:root {
+		--edge: max(0rem, (100vw - 85rem) / 2);
+	}
+
 	:root[data-has-sidebar][data-has-toc] {
-		--edge: max(
-			0rem,
-			(
-				100vw -
-				2 *
-				var(--sl-sidebar-width) -
-				var(--sl-content-width) -
-				2 *
-				var(--sl-content-pad-x)
-			) /
-			2
-		);
 		--sl-content-inline-start: calc(var(--sl-sidebar-width) + var(--edge));
 		/* The top row's space on the right: it reaches 4rem past the contents when there's room */
 		--header-end: max(var(--sl-sidebar-pad-x), var(--edge) - 4rem);
@@ -74,6 +67,11 @@
 	[data-has-toc] .header {
 		padding-inline: calc(var(--edge) + var(--sl-sidebar-pad-x))
 			var(--header-end);
+	}
+
+	/* Learn's front page: the logo and the icons at the frame's edges too */
+	[data-has-hero] .header {
+		padding-inline: calc(var(--edge) + var(--sl-sidebar-pad-x));
 	}
 }
 
