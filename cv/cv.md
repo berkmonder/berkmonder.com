@@ -6,7 +6,7 @@ Istanbul, Turkey · [berkmonder@gmail.com](mailto:berkmonder@gmail.com) · +90 5
 
 ## Summary
 
-MLOps engineer with 4+ years of experience taking machine learning and LLM systems from prototype to production in telecommunications and mobile apps. Builds and runs the whole path: CI/CD for models, training and fine-tuning, serving and inference, monitoring and tracing, and the cloud infrastructure underneath. Hands-on with LLM systems (RAG, tool-using agents, self-hosted model serving), MLflow, Airflow, Docker and GCP, and runs a self-hosted production stack as code. M.Sc. in physics.
+MLOps engineer with 4+ years of experience taking machine learning and LLM systems from prototype to production in telecommunications and mobile apps. Builds and runs the whole path: CI/CD for models, training and fine-tuning, serving and inference, monitoring and tracing, and the cloud infrastructure underneath. Hands-on with LLM systems (RAG, tool-using and multi-agent workflows, MCP, self-hosted model serving), MLflow, Airflow, Terraform, Docker and GCP, and runs a self-hosted production stack as code. M.Sc. in physics.
 
 ## Experience
 
@@ -15,11 +15,11 @@ MLOps engineer with 4+ years of experience taking machine learning and LLM syste
 *Aug 2024 – Present*
 
 - Designed and deployed a modular retrieval-augmented generation (RAG) assistant with LangChain and Open WebUI that answers precisely from structured internal data, through custom Python pipelines and tool integrations.
-- Built CI/CD with GitHub, Cloud Build and Docker that produces versioned model artifacts and reproducible deployments; containerized ML and LLM services.
+- Built CI/CD with GitHub, Cloud Build and Docker for containerized ML and LLM services, producing versioned model artifacts and reproducible deployments; managed GCP resources as code with Terraform.
 - Standardized experiment tracking by integrating MLflow into Airflow pipelines, improving model observability and reproducibility.
 - Fine-tuned ~30B-parameter Qwen models on RunPod with better GPU utilization, cutting training time and infrastructure cost.
 - Scaled a production spam detection pipeline processing millions of records per week by segmenting its data processing, removing memory bottlenecks and making runs stable.
-- Built automated anomaly detection pipelines on GCP with Dataform and Airflow for high-cardinality event data across thousands of dimensions, replacing manual query work.
+- Built automated anomaly detection pipelines on GCP with Dataform (BigQuery) and Airflow on Cloud Composer (GKE) for high-cardinality event data across thousands of dimensions, replacing manual query work.
 
 ### Machine Learning Engineer, P.I. Works
 
@@ -60,9 +60,9 @@ MLOps engineer with 4+ years of experience taking machine learning and LLM syste
 ## Skills
 
 - **Programming:** Python, SQL, Bash; Git, uv; AI coding agents (Claude Code)
-- **LLMs and agents:** RAG, tool-using agents (Pydantic AI, LangChain, LangGraph), fine-tuning (Hugging Face, Unsloth), model serving (llama.cpp, vLLM, Ollama, LiteLLM)
+- **LLMs and agents:** RAG, tool-using and multi-agent systems (Pydantic AI, LangChain, LangGraph), Model Context Protocol (MCP), fine-tuning (Hugging Face, Unsloth), model serving (llama.cpp, vLLM, Ollama, LiteLLM)
 - **Machine learning:** PyTorch, scikit-learn, TensorFlow, time series forecasting, anomaly detection
 - **MLOps and data:** MLflow, Airflow, Prefect, Dataform, PySpark, Pandas, Polars, FastAPI
-- **Cloud and infrastructure:** GCP, Docker, Podman, CI/CD (GitHub Actions, Cloud Build), Terraform, NixOS, Linux, Tailscale, RunPod
+- **Cloud and infrastructure:** GCP (BigQuery, Cloud Composer, Cloud Build), Terraform, Docker, Kubernetes (GKE), Podman, CI/CD (GitHub Actions), NixOS, Linux, Tailscale, RunPod
 - **Monitoring:** Prometheus, Grafana, MLflow tracing, k6 load testing
 - **Languages:** Turkish (native), English (professional working proficiency)
